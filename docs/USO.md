@@ -18,7 +18,7 @@ Due modi, scegli quello che preferisci (entrambi dal backend Joomla):
 - **Da URL:** *Sistema → Installa → Installa da URL* → incolla l'URL dello zip → **Installa**.
   URL ultima versione:
   ```
-  https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.0.2.zip
+  https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.1.0.zip
   ```
 
 > Reinstallare sopra una versione già presente è un **aggiornamento in-place**: i parametri
@@ -52,9 +52,16 @@ Il plugin ha bisogno di due cose di Cloudflare: lo **Zone ID** e un **API Token*
 
 1. *Sistema → Plugin* → cerca **`cfpurge`** → apri **"Content - Cloudflare Cache Purge"**.
 2. Incolla **Cloudflare Zone ID** e **Cloudflare API Token**.
-3. **Stato → Abilitato** → **Salva**.
+3. (Opzionale) Sotto **"Eventi su cui eseguire il purge"** scegli **Sì/No** per ciascuno:
+   - **Alla creazione** di un articolo
+   - **Alla modifica** di un articolo
+   - **Al cambio di stato** (pubblica / spubblica / cestina)
+   - **Alla cancellazione**
+   Di default sono tutti su **Sì** (svuota sempre). Mettili su **No** se per qualche caso
+   non vuoi il purge (es. solo alla pubblicazione e non a ogni modifica).
+4. **Stato → Abilitato** → **Salva**.
 
-Fatto: da ora ogni salvataggio/pubblicazione di un articolo svuota la cache.
+Fatto: da ora il plugin svuota la cache sugli eventi che hai scelto.
 
 ---
 
