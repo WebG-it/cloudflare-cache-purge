@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Changelog feed Joomla per plg_content_cfpurge. Referenziato da updates/cfpurge.xml via <changelogurl>. -->
+<changelogs>
+    <changelog>
+        <element>cfpurge</element>
+        <type>plugin</type>
+        <folder>content</folder>
+        <version>1.1.1</version>
+        <addition>
+            <item>Plugin icon bundled in the package and shown in the Joomla Extensions manager.</item>
+        </addition>
+    </changelog>
+    <changelog>
+        <element>cfpurge</element>
+        <type>plugin</type>
+        <folder>content</folder>
+        <version>1.1.0</version>
+        <feature>
+            <item>Four independent switches to choose which events trigger the purge: article create, update, state change (publish/unpublish/trash) and delete. All on by default.</item>
+        </feature>
+    </changelog>
+    <changelog>
+        <element>cfpurge</element>
+        <type>plugin</type>
+        <folder>content</folder>
+        <version>1.0.2</version>
+        <security>
+            <item>Defensive hardening: rawurlencode of the zone in the API URL and stripping of control characters from the token (anti header-injection).</item>
+            <item>SHA-256 integrity hash added to the update server so Joomla verifies the downloaded package.</item>
+        </security>
+    </changelog>
+    <changelog>
+        <element>cfpurge</element>
+        <type>plugin</type>
+        <folder>content</folder>
+        <version>1.0.1</version>
+        <addition>
+            <item>Joomla Update System integration for one-click updates.</item>
+        </addition>
+    </changelog>
+    <changelog>
+        <element>cfpurge</element>
+        <type>plugin</type>
+        <folder>content</folder>
+        <version>1.0.0</version>
+        <note>
+            <item>First release: purge the Cloudflare cache on article save / state change / delete.</item>
+        </note>
+    </changelog>
+</changelogs>
