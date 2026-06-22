@@ -7,13 +7,14 @@
         <element>cfpurge</element>
         <type>plugin</type>
         <folder>content</folder>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <maintainer>Marco Galassi (WebG)</maintainer>
         <maintainerurl>https://www.webg.it</maintainerurl>
         <infourl title="WebG">https://www.webg.it</infourl>
         <downloads>
-            <downloadurl type="full" format="zip">https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.0.1.zip</downloadurl>
+            <downloadurl type="full" format="zip">https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.0.2.zip</downloadurl>
         </downloads>
+        <sha256>01c5a27b99d8f5e9611ef0f9e2a79166c3ddad366a80a203b3a178e794d3492f</sha256>
         <tags>
             <tag>stable</tag>
         </tags>
