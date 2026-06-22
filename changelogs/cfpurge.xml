@@ -5,6 +5,15 @@
         <element>cfpurge</element>
         <type>plugin</type>
         <folder>content</folder>
+        <version>1.1.4</version>
+        <fix>
+            <item>Event switches now render correctly as ON (green) by default: fixed the switcher option order (No/Yes) so the toggle position matches the stored value. No change in behaviour, purge is on for all events by default.</item>
+        </fix>
+    </changelog>
+    <changelog>
+        <element>cfpurge</element>
+        <type>plugin</type>
+        <folder>content</folder>
         <version>1.1.3</version>
         <change>
             <item>JED Checker compliance: en-GB language files (sys.ini/ini), manifest name follows the "{Type} - {Name}" convention, removed the non-standard &lt;icon&gt; element, control-character filter rewritten without hex escapes (JAMSS-clean). No functional changes.</item>
