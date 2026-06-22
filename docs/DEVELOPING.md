@@ -18,6 +18,10 @@ Su `onContentAfterSave` / `onContentChangeState` / `onContentAfterDelete` di un 
 il plugin fa una POST a Cloudflare con `{"purge_everything": true}` sulla zona configurata.
 Best-effort: se la chiamata fallisce, il salvataggio dell'articolo non viene mai bloccato.
 
+Da **1.1.0** ogni evento è attivabile dai parametri `on_create` / `on_update` / `on_state` /
+`on_delete` (default tutti ON). Creazione vs modifica si distinguono col flag **`isNew`** di
+`onContentAfterSave`. Un guard statico (`$alreadyPurged`) evita purge doppi nella stessa richiesta.
+
 **Quando scatta e quando NO** (cruciale):
 
 - ✅ Salvataggio da **backend Joomla** (UI).
