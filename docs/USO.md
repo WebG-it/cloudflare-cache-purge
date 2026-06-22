@@ -18,7 +18,7 @@ Due modi, scegli quello che preferisci (entrambi dal backend Joomla):
 - **Da URL:** *Sistema → Installa → Installa da URL* → incolla l'URL dello zip → **Installa**.
   URL ultima versione:
   ```
-  https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.1.2.zip
+  https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.1.3.zip
   ```
 
 > Reinstallare sopra una versione già presente è un **aggiornamento in-place**: i parametri
