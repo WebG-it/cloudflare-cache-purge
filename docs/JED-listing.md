@@ -8,8 +8,8 @@ La descrizione DEVE essere in inglese.
 | Campo JED | Valore |
 |-----------|--------|
 | **Extension Name** | `Cloudflare Cache Purge` |
-| **Version** | `1.1.1` |
-| **Extensions File** | carica `plg_content_cfpurge-1.1.1.zip` (da `dist/`) |
+| **Version** | `1.1.2` |
+| **Extensions File** | carica `plg_content_cfpurge-1.1.2.zip` (da `dist/`) |
 | My extension includes external libraries | **NO** (lasciare deselezionato) |
 | **Category** | `Hosting & Servers → Site speed` (in alternativa `Core Enhancements → Performance`) |
 | **Tags** (max 5) | cloudflare, cache, cdn, performance, purge |
@@ -30,7 +30,7 @@ La descrizione DEVE essere in inglese.
 | Campo | Valore |
 |-------|--------|
 | **Download type** | `Free Direct Download link:` |
-| **Download URL** | `https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.1.1.zip` |
+| **Download URL** | `https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.1.2.zip` |
 
 ## Options
 
