@@ -5,6 +5,15 @@
         <element>cfpurge</element>
         <type>plugin</type>
         <folder>content</folder>
+        <version>1.1.2</version>
+        <change>
+            <item>JED compliance: English UI labels and description, GPL licence header in every PHP file, extension name aligned with the JED listing. No functional changes.</item>
+        </change>
+    </changelog>
+    <changelog>
+        <element>cfpurge</element>
+        <type>plugin</type>
+        <folder>content</folder>
         <version>1.1.1</version>
         <addition>
             <item>Plugin icon bundled in the package and shown in the Joomla Extensions manager.</item>
