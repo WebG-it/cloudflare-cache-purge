@@ -17,18 +17,20 @@ on the administrator home page lets you clear it **by hand**, all of it or just 
 - **Home page box** (administrator dashboard): traffic light of the Cloudflare connection, button
   *Clear the whole cache*, a field to clear one or more addresses, and the outcome of the last
   purge.
+- **API for programs** (Joomla Web Services): a bot can clear the cache with the Joomla API token of a user you
+  allow, see section 8. Closed to everybody except Super Users until you grant it.
 - **Guided setup** with a *Verify connection* button that tells you in plain words what is wrong
   (token, permission, Zone ID).
 - Optional: clear Cloudflare **together with System > Clear Cache**, and a **targeted mode** that
   clears only the changed pages instead of the whole cache.
 
-Requirements: Joomla 5 or 6, PHP 8.1 or later, a Cloudflare account with your domain in it. Tested
+Requirements: Joomla 5.0 or later (5.x or 6.x; not Joomla 4), PHP 8.1 or later, a Cloudflare account with your domain in it. Tested
 on Joomla 6.2.0 and 5.4.10 with PHP 8.4.
 
 ## 2. Install
 
-*System > Install > Extensions > Upload Package File*, drop `pkg_cfpurge-2.0.0.zip`
-(from the [releases](https://github.com/WebG-it/joomla-extensions/releases)). The installer
+*System > Install > Extensions > Upload Package File*, drop `pkg_cfpurge-2.1.0.zip`
+(from the [releases](https://github.com/WebG-it/cloudflare-cache-purge/releases)). The installer
 switches everything on and puts the box on the home page.
 
 **If you have the old plugin (1.1.4 or earlier)**: install the package over it, or use *System >
@@ -129,7 +131,41 @@ always can). The automatic purge does not depend on this.
   *Finish Publishing* date) raises no event either: clear it by hand, or keep short cache times in
   Cloudflare for pages with scheduled publishing.
 
-## 8. Update and uninstall
+## 8. Use it from a program (Joomla API)
+
+A bot or script can clear the Cloudflare cache through the Joomla Web Services API, with the **Joomla
+API token of a user** (the same kind of token a bot uses to publish articles). Nothing else is exposed:
+the Cloudflare token and the Zone ID never appear in an answer.
+
+**Set up, once**
+
+1. The plugin *Web Services - Cloudflare Cache Purge* is switched on by the installer (switch it off to
+   close the API). *System > Plugins*, group *Web Services*.
+2. Choose who may use it: *System > Global Configuration > Cloudflare Cache Purge* (or the Options of the
+   component, `index.php?option=com_config&view=component&component=com_cfpurge`), tab *Permissions*, two
+   actions per user group: **Read the state (API)** and **Clear the Cloudflare cache (API)**. Super Users
+   always can; **nobody else can until you grant it**.
+3. The user must be able to log in to the API: the group needs the permission *Web Services Login* in
+   *Global Configuration > Permissions* (Super Users have it) and the user needs a **Joomla API token**
+   (*Users > edit user > Joomla API Token*, plugin *User - Joomla API Token* on, the group allowed in its options).
+4. The connection must be verified once in the plugin options (*Verify connection*), as for the box.
+
+**Calls** (header `Authorization: Bearer <Joomla API token>`, or `X-Joomla-Token`)
+
+| Call | Does | Needs |
+|---|---|---|
+| `GET /api/index.php/v1/cfpurge/status` | Is it set up and verified, purge mode, outcome of the last purge. | Read the state |
+| `POST /api/index.php/v1/cfpurge/all` | Clears the whole Cloudflare cache. | Clear the cache |
+| `POST /api/index.php/v1/cfpurge/urls` | Clears some addresses. Body: `{"urls": ["/page-one", "https://www.example.com/page-two"]}` | Clear the cache |
+
+Addresses are checked like in the box: only addresses of this site, up to 100, duplicates removed.
+Answers are JSON:API (`{"data": {"type": "cfpurge", "id": "purge", "attributes": {...}}}`) with `ok`,
+`message`, `cause`, `count` and `last` (when, who, what, outcome). Status codes: 200 done; 400 body
+without `urls`; 401 not logged in or wrong token; 403 no permission; 404 API closed; 409 connection not
+verified or plugin off; 422 invalid, empty or too many addresses; 502 Cloudflare refused (see `cause`).
+Every call is written to the plugin log with the user and the source `api`.
+
+## 9. Update and uninstall
 
 Updates appear in *System > Update > Extensions* (the package registers the WebG update server).
 
@@ -137,7 +173,7 @@ Updates appear in *System > Update > Extensions* (the package registers the WebG
 **Uninstall**. Everything goes: the plugins, the module and its place on the home page, the
 language files, the log and the update server. There are no database tables.
 
-## 9. Troubleshooting
+## 10. Troubleshooting
 
 | You see | What to do |
 |---|---|
@@ -152,9 +188,9 @@ language files, the log and the update server. There are no database tables.
 ## Tested compatibility
 
 Joomla 6.2.0 and 5.4.10, PHP 8.4, MariaDB 11.4: install, upgrade over 1.1.4, update through the update
-server, purge from the box, verification with wrong tokens and zones, all the events, targeted
+server, purge from the box, the API with Joomla API tokens, verification with wrong tokens and zones, all the events, targeted
 addresses, uninstall. Cloudflare was a fake API (no real token used in the tests). JED Checker
 `master` and `develop`: no errors, no warnings.
 
-Support: [GitHub issues](https://github.com/WebG-it/joomla-extensions/issues) (write your Joomla
+Support: [GitHub issues](https://github.com/WebG-it/cloudflare-cache-purge/issues) (write your Joomla
 and PHP versions; never post tokens or private data).

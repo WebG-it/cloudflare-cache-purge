@@ -3,22 +3,23 @@
 <updates>
     <update>
         <name>Cloudflare Cache Purge</name>
-        <description>Svuota la cache Cloudflare al salvataggio/cambio stato/cancellazione di un articolo.</description>
+        <description>Clears the Cloudflare cache when your Joomla site changes, from a box on the administrator home page, and through the Joomla Web Services API.</description>
         <element>cfpurge</element>
         <type>plugin</type>
         <folder>content</folder>
-        <version>1.1.4</version>
+        <version>2.1.0</version>
         <maintainer>Marco Galassi (WebG)</maintainer>
         <maintainerurl>https://www.webg.it</maintainerurl>
         <infourl title="WebG">https://www.webg.it</infourl>
         <changelogurl>https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/changelogs/cfpurge.xml</changelogurl>
         <downloads>
-            <downloadurl type="full" format="zip">https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/dist/plg_content_cfpurge-1.1.4.zip</downloadurl>
+            <downloadurl type="full" format="zip">https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/dist/pkg_cfpurge-2.1.0.zip</downloadurl>
         </downloads>
-        <sha256>b339cf8a8eed3df8218ab6ec68f91e0f891eb36f3cf455ad33068a864e2297f3</sha256>
+        <sha256>57317bb697f465a63fddf43073921e89436f423d237b556375ce743fb0e3d9b3</sha256>
         <tags>
             <tag>stable</tag>
         </tags>
         <targetplatform name="joomla" version="(5|6)\.[0-9]+" />
+        <php_minimum>8.1</php_minimum>
     </update>
 </updates>

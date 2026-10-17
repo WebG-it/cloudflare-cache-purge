@@ -24,9 +24,8 @@ use WebG\Plugin\Content\Cfpurge\Service\Config;
 use WebG\Plugin\Content\Cfpurge\Service\Diagnostics;
 use WebG\Plugin\Content\Cfpurge\Service\Events;
 use WebG\Plugin\Content\Cfpurge\Service\LastPurge;
+use WebG\Plugin\Content\Cfpurge\Service\ManualPurge;
 use WebG\Plugin\Content\Cfpurge\Service\PurgeLog;
-use WebG\Plugin\Content\Cfpurge\Service\Purger;
-use WebG\Plugin\Content\Cfpurge\Service\Targets;
 
 /**
  * Purges the Cloudflare cache when the public site changes (articles, categories, menu
@@ -217,54 +216,7 @@ final class Cfpurge extends CMSPlugin implements SubscriberInterface
      */
     private function actionPurge(Config $config, ?string $text): array
     {
-        if (!$config->isVerified()) {
-            return ['ok' => false, 'error' => 'not_verified', 'message' => Text::_('PLG_CONTENT_CFPURGE_AJAX_NOT_VERIFIED')];
-        }
-
-        $urls = null;
-
-        if ($text !== null) {
-            $urls    = [];
-            $invalid = [];
-
-            foreach (preg_split('/\R/', $text) ?: [] as $line) {
-                if (trim($line) === '') {
-                    continue;
-                }
-
-                $url = Targets::normalise($line);
-
-                if ($url === null) {
-                    $invalid[] = mb_substr(trim($line), 0, 120);
-                } else {
-                    $urls[] = $url;
-                }
-            }
-
-            $urls = array_values(array_unique($urls));
-
-            if ($urls === [] && $invalid === []) {
-                return ['ok' => false, 'error' => 'empty', 'message' => Text::_('PLG_CONTENT_CFPURGE_AJAX_NO_URLS')];
-            }
-
-            if ($invalid !== []) {
-                return ['ok' => false, 'error' => 'invalid', 'invalid' => $invalid, 'message' => Text::sprintf('PLG_CONTENT_CFPURGE_AJAX_INVALID_URLS', Targets::host())];
-            }
-
-            if (\count($urls) > 100) {
-                return ['ok' => false, 'error' => 'too_many', 'message' => Text::_('PLG_CONTENT_CFPURGE_AJAX_TOO_MANY')];
-            }
-        }
-
-        $outcome = Purger::purgeNow($config, $urls, 'dashboard');
-
-        $message = $outcome['ok']
-            ? ($urls === null ? Text::_('PLG_CONTENT_CFPURGE_AJAX_PURGED_ALL') : Text::sprintf('PLG_CONTENT_CFPURGE_AJAX_PURGED_URLS', \count($urls)))
-            : Text::sprintf('PLG_CONTENT_CFPURGE_AJAX_PURGE_FAILED', $outcome['summary']);
-
-        $last = PurgeLog::last('purge');
-
-        return ['ok' => $outcome['ok'], 'message' => $message, 'cause' => $outcome['cause'], 'last' => $last, 'lastText' => LastPurge::describe($last)];
+        return ManualPurge::run($config, $text, 'dashboard');
     }
 
     /**

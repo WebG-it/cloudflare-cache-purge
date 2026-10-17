@@ -17,18 +17,20 @@ nella home dell'amministrazione permette di svuotarla **a mano**, tutta o solo a
 - **Riquadro nella home** (pannello di controllo): semaforo della connessione a Cloudflare,
   pulsante *Svuota tutta la cache*, un campo per svuotare uno o più indirizzi e l'esito
   dell'ultimo purge.
+- **API per programmi** (Web Services di Joomla): un bot può svuotare la cache con il token API Joomla di un
+  utente che autorizzi, vedi la sezione 8. Chiusa a tutti tranne i Super utenti finché non la apri tu.
 - **Configurazione guidata** con il pulsante *Verifica connessione*, che ti dice in chiaro cosa non
   va (token, permesso, Zone ID).
 - Facoltativi: svuotare Cloudflare **insieme a Sistema > Svuota cache**, e una **modalità
   mirata** che svuota solo le pagine cambiate invece di tutta la cache.
 
-Requisiti: Joomla 5 o 6, PHP 8.1 o successivo, un account Cloudflare con il tuo dominio dentro.
+Requisiti: Joomla 5.0 o successivo (5.x o 6.x; non Joomla 4), PHP 8.1 o successivo, un account Cloudflare con il tuo dominio dentro.
 Provato su Joomla 6.2.0 e 5.4.10 con PHP 8.4.
 
 ## 2. Installare
 
-*Sistema > Installa > Estensioni > Carica file pacchetto*, trascina `pkg_cfpurge-2.0.0.zip` (dalle
-[release](https://github.com/WebG-it/joomla-extensions/releases)). L'installazione accende tutto e
+*Sistema > Installa > Estensioni > Carica file pacchetto*, trascina `pkg_cfpurge-2.1.0.zip` (dalle
+[release](https://github.com/WebG-it/cloudflare-cache-purge/releases)). L'installazione accende tutto e
 mette il riquadro nella home.
 
 **Se hai il vecchio plugin (1.1.4 o precedente)**: installa il pacchetto sopra, oppure usa
@@ -135,7 +137,42 @@ Super Utenti possono sempre). Il purge automatico non dipende da questa scelta.
   *Fine pubblicazione*) non fa scattare nessun evento: svuota a mano, oppure tieni tempi di cache
   brevi in Cloudflare per le pagine con pubblicazione programmata.
 
-## 8. Aggiornare e disinstallare
+## 8. Usarlo da un programma (API di Joomla)
+
+Un bot o uno script può svuotare la cache di Cloudflare con le API Web Services di Joomla, usando il
+**token API Joomla di un utente** (lo stesso tipo di token che un bot usa per pubblicare articoli). Non viene
+esposto altro: il token di Cloudflare e lo Zone ID non compaiono mai in una risposta.
+
+**Da fare, una volta**
+
+1. Il plugin *Web Services - Cloudflare Cache Purge* è acceso dall'installazione (spegnilo per chiudere
+   l'API). *Sistema > Plugin*, gruppo *Web Services*.
+2. Scegli chi può usarlo: *Sistema > Configurazione globale > Cloudflare Cache Purge* (oppure le Opzioni del
+   componente, `index.php?option=com_config&view=component&component=com_cfpurge`), scheda *Permessi*, due
+   azioni per gruppo di utenti: **Leggere lo stato (API)** e **Svuotare la cache di Cloudflare (API)**. I
+   Super utenti possono sempre; **nessun altro può finché non glielo dai**.
+3. L'utente deve poter entrare nelle API: il gruppo ha bisogno del permesso *Accesso ai Web Services* in
+   *Configurazione globale > Permessi* (i Super utenti ce l'hanno) e l'utente di un **token API Joomla**
+   (*Utenti > modifica utente > Token API Joomla*, plugin *Utente - Token API Joomla* acceso, gruppo
+   ammesso nelle sue opzioni).
+4. La connessione va verificata una volta nelle opzioni del plugin (*Verifica connessione*), come per il riquadro.
+
+**Chiamate** (intestazione `Authorization: Bearer <token API Joomla>`, oppure `X-Joomla-Token`)
+
+| Chiamata | Fa | Serve |
+|---|---|---|
+| `GET /api/index.php/v1/cfpurge/status` | Se è configurato e verificato, modalità, esito dell'ultima pulizia. | Leggere lo stato |
+| `POST /api/index.php/v1/cfpurge/all` | Svuota tutta la cache di Cloudflare. | Svuotare la cache |
+| `POST /api/index.php/v1/cfpurge/urls` | Svuota alcuni indirizzi. Corpo: `{"urls": ["/pagina-uno", "https://www.example.com/pagina-due"]}` | Svuotare la cache |
+
+Gli indirizzi si controllano come nel riquadro: solo indirizzi di questo sito, al massimo 100, doppioni tolti.
+Le risposte sono JSON:API (`{"data": {"type": "cfpurge", "id": "purge", "attributes": {...}}}`) con `ok`,
+`message`, `cause`, `count` e `last` (quando, chi, cosa, esito). Codici: 200 fatto; 400 corpo senza `urls`;
+401 non autenticato o token sbagliato; 403 senza permesso; 404 API chiusa; 409 connessione non verificata o
+plugin spento; 422 indirizzi non validi, vuoti o troppi; 502 Cloudflare ha rifiutato (vedi `cause`). Ogni
+chiamata finisce nel log del plugin con l'utente e l'origine `api`.
+
+## 9. Aggiornare e disinstallare
 
 Gli aggiornamenti compaiono in *Sistema > Aggiorna > Estensioni* (il pacchetto registra il server di
 aggiornamento WebG).
@@ -144,7 +181,7 @@ aggiornamento WebG).
 **Disinstalla**. Va via tutto: i plugin, il modulo e il suo posto nella home, i file di lingua, il
 log e il server di aggiornamento. Non ci sono tabelle nel database.
 
-## 9. Se qualcosa non va
+## 10. Se qualcosa non va
 
 | Cosa vedi | Cosa fare |
 |---|---|
@@ -163,5 +200,5 @@ aggiornamento dal server di aggiornamento, purge dal riquadro, verifica con toke
 tutti gli eventi, indirizzi mirati, disinstallazione. Cloudflare era un'API finta (nessun token
 vero nelle prove). JED Checker `master` e `develop`: zero errori, zero avvisi.
 
-Supporto: [GitHub issues](https://github.com/WebG-it/joomla-extensions/issues) (scrivi le versioni
+Supporto: [GitHub issues](https://github.com/WebG-it/cloudflare-cache-purge/issues) (scrivi le versioni
 di Joomla e PHP; mai token o dati privati nei messaggi).

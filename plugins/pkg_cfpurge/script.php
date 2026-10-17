@@ -67,6 +67,7 @@ class Pkg_CfpurgeInstallerScript extends InstallerScript
                 'content' => $this->extensionId('plugin', 'cfpurge', 'content') > 0,
                 'system'  => $this->extensionId('plugin', 'cfpurge', 'system') > 0,
                 'module'  => $this->extensionId('module', 'mod_cfpurge') > 0,
+                'webservices' => $this->extensionId('plugin', 'cfpurge', 'webservices') > 0,
             ];
         }
 
@@ -96,6 +97,12 @@ class Pkg_CfpurgeInstallerScript extends InstallerScript
             $this->enable('plugin', 'cfpurge', 'system');
         }
 
+        // The API plugin is inert until a Super User gives somebody the permission in the options of
+        // com_cfpurge and that person has a Joomla API token: switching it on is safe.
+        if (empty($this->had['webservices'])) {
+            $this->enable('plugin', 'cfpurge', 'webservices');
+        }
+
         if (empty($this->had['module'])) {
             $this->createModule();
         }
@@ -106,7 +113,7 @@ class Pkg_CfpurgeInstallerScript extends InstallerScript
         $key  = !empty($this->had['content']) ? 'PKG_CFPURGE_POSTINSTALL_UPGRADE' : 'PKG_CFPURGE_POSTINSTALL_NEW';
         $text = Text::_($key);
 
-        $app->enqueueMessage($text !== $key ? $text : 'Cloudflare Cache Purge 2 is installed. Open System > Plugins > Content - Cloudflare Cache Purge and click Verify connection.', 'message');
+        $app->enqueueMessage($text !== $key ? $text : 'Cloudflare Cache Purge is installed. Open System > Plugins > Content - Cloudflare Cache Purge and click Verify connection.', 'message');
 
         return true;
     }

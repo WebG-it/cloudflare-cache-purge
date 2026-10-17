@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<access component="com_cfpurge">
+    <section name="component">
+        <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+        <action name="cfpurge.status" title="COM_CFPURGE_ACTION_STATUS" description="COM_CFPURGE_ACTION_STATUS_DESC" />
+        <action name="cfpurge.purge" title="COM_CFPURGE_ACTION_PURGE" description="COM_CFPURGE_ACTION_PURGE_DESC" />
+    </section>
+</access>

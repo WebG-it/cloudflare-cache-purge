@@ -35,8 +35,10 @@ return new class () implements ServiceProviderInterface {
         $container->set(
             PluginInterface::class,
             function (Container $container) {
-                $plugin = new Cfpurge(
-                    $container->get(DispatcherInterface::class),
+                // Joomla 4 takes the dispatcher by reference: it needs a variable.
+                $dispatcher = $container->get(DispatcherInterface::class);
+                $plugin     = new Cfpurge(
+                    $dispatcher,
                     (array) PluginHelper::getPlugin('system', 'cfpurge')
                 );
                 $plugin->setApplication(Factory::getApplication());

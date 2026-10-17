@@ -9,7 +9,7 @@ La descrizione DEVE essere in inglese.
 |-----------|--------|
 | **Extension Name** | `Cloudflare Cache Purge` |
 | **Version** | `2.0.0` |
-| **Extensions File** | carica `pkg_cfpurge-2.0.0.zip` (da `dist/`) |
+| **Extensions File** | carica `pkg_cfpurge-2.1.0.zip` (da `dist/`) |
 | My extension includes external libraries | **NO** (lasciare deselezionato) |
 | **Category** | `Hosting & Servers → Site speed` (in alternativa `Core Enhancements → Performance`) |
 | **Tags** (max 5) | cloudflare, cache, cdn, performance, purge |
@@ -30,7 +30,7 @@ La descrizione DEVE essere in inglese.
 | Campo | Valore |
 |-------|--------|
 | **Download type** | `Free Direct Download link:` |
-| **Download URL** | `https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/dist/pkg_cfpurge-2.0.0.zip` |
+| **Download URL** | `https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/dist/pkg_cfpurge-2.1.0.zip` |
 
 ## Options
 

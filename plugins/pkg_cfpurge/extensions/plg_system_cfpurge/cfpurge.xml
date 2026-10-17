@@ -8,7 +8,7 @@
     <copyright>(C) 2026 Marco Galassi / WebG</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <licence>GNU GPL version 2 or later (GPL-2.0-or-later); see LICENSE.txt</licence>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
     <description>PLG_SYSTEM_CFPURGE_XML_DESCRIPTION</description>
     <namespace path="src">WebG\Plugin\System\Cfpurge</namespace>
     <files>

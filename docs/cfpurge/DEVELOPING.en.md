@@ -1,4 +1,4 @@
-# Cloudflare Cache Purge: developer guide (pkg_cfpurge 2.0)
+# Cloudflare Cache Purge: developer guide (pkg_cfpurge 2.1)
 
 English summary of [DEVELOPING.md](./DEVELOPING.md) (Italian, more detailed). User guides:
 [USAGE.md](./USAGE.md), [USO.md](./USO.md).
@@ -16,6 +16,8 @@ plugins/pkg_cfpurge/
     plg_content_cfpurge/   element cfpurge, group content (as 1.1.4: in-place upgrade, parameters kept)
     plg_system_cfpurge/    element cfpurge, group system: events a content plugin cannot hear
     mod_cfpurge/           administrator module, position cpanel
+    com_cfpurge/           API component (permissions, controller), no screens
+    plg_webservices_cfpurge/  group webservices: the three API routes
 ```
 
 - **Why a system plugin**: Joomla imports only the `system`, `behaviour` and `user` plugin groups on
@@ -43,6 +45,23 @@ plugins/pkg_cfpurge/
   harmless purge of a non-existing address to prove the Purge permission.
 - The Cloudflare address is fixed in the code; the token goes only there.
 
+## The API (2.1)
+
+`com_cfpurge` is a component with no screens: `admin/` holds `access.xml` (actions `cfpurge.status`,
+`cfpurge.purge`), `config.xml` (the permissions form) and the service provider; `api/src/Controller/PurgeController.php`
+answers the three routes registered by `plg_webservices_cfpurge` (`onBeforeApiRoute`). The controller checks the
+identity set by the Joomla API authentication (`$user->authorise('cfpurge.purge', 'com_cfpurge')`, Super Users always;
+the asset starts with no rules) and then calls `Service\ManualPurge`, the same code as the box on the home page
+(verified connection, address checks, 100 addresses, `Purger::purgeNow`). The answer is a JSON:API resource built with
+`ResultSerializer` and the document of the API application. `ManualPurge::publicLast()` is the only view of the log the
+API gives; the token and the Zone ID are never part of a result. Logging in to the API also needs the core permission
+*Web Services Login* (`core.login.api`) for the group. Joomla 5.0 or later: the package refuses to install on Joomla 4
+(tested on 4.4.14: install, box, API work, but the targeted mode builds wrong addresses there).
+
+Tests: scenario `api` of `scripts/e2e.py` (in joomla-dev-tools): Super User with basic authentication, a Manager with
+a real Joomla API token (no permission, status only, purge), anonymous calls, bad input, Cloudflare failure, not
+verified, no secret in any answer, API closed with the plugin off.
+
 ## Test environment (Docker)
 
 `dev/cfpurge/`: Joomla 6.2.0 or 5.4.10 + PHP 8.4 + MariaDB 11.4 and a **fake Cloudflare API** (the
@@ -64,7 +83,7 @@ With Git Bash on Windows prefix `docker compose exec` with `MSYS_NO_PATHCONV=1`.
 `python scripts/e2e.py --project cfpurge-j5 --env .cache/compat-j5.env`.
 
 `scripts/e2e.py` scenarios: `install`, `upgrade` (1.1.4 then the package), `visibility`, `verify`,
-`state`, `purge`, `events`, `targeted`, `cache`, `update` (local update server), `uninstall`.
+`state`, `purge`, `events`, `targeted`, `cache`, `update` (local update server), `api`, `uninstall`.
 
 JED Checker: Joomla 6 needs *Behaviour - Backward Compatibility 6* on, only for the check. Run
 `master` with `scripts/jed_master.py` and `develop` with `scripts/jedchecker_cli.php` on the

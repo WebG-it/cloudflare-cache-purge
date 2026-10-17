@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @package     WebG.Plugin
+ * @subpackage  WebServices.cfpurge
+ *
+ * @copyright   (C) 2026 WebG di Marco Galassi <https://www.webg.it>
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+// phpcs:disable PSR1.Files.SideEffects
+\defined('_JEXEC') or die;
+// phpcs:enable PSR1.Files.SideEffects
+
+use Joomla\CMS\Extension\PluginInterface;
+use Joomla\CMS\Factory;
+use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\DI\Container;
+use Joomla\DI\ServiceProviderInterface;
+use Joomla\Event\DispatcherInterface;
+use WebG\Plugin\WebServices\Cfpurge\Extension\Cfpurge;
+
+return new class () implements ServiceProviderInterface {
+    /**
+     * Registers the plugin (Joomla 4, 5 and 6 service provider).
+     *
+     * @param   Container  $container  The DI container.
+     *
+     * @return  void
+     *
+     * @since   2.1.0
+     */
+    public function register(Container $container): void
+    {
+        $container->set(
+            PluginInterface::class,
+            function (Container $container) {
+                // Joomla 4 takes the dispatcher by reference: it needs a variable.
+                $dispatcher = $container->get(DispatcherInterface::class);
+                $plugin     = new Cfpurge(
+                    $dispatcher,
+                    (array) PluginHelper::getPlugin('webservices', 'cfpurge')
+                );
+                $plugin->setApplication(Factory::getApplication());
+
+                return $plugin;
+            }
+        );
+    }
+};

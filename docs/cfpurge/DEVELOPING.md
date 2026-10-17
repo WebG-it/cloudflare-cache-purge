@@ -1,4 +1,4 @@
-# Cloudflare Cache Purge: guida per lo sviluppatore (pkg_cfpurge 2.0)
+# Cloudflare Cache Purge: guida per lo sviluppatore (pkg_cfpurge 2.1)
 
 Documentazione **tecnica**, per uno sviluppatore o un'AI che deve modificare, provare, compilare o
 rilasciare il pacchetto. Per installare e configurare: [USO.md](./USO.md) (italiano),
@@ -88,6 +88,21 @@ salvataggio del form non lo sovrascrive con un valore vecchio); l'ultimo purge s
 - `com_ajax` di Joomla 5.4/6.2 lascia passare agli ospiti dell'amministrazione solo i metodi con
   l'attributo `AllowUnauthorizedAdministratorAccess`: il nostro non lo ha.
 
+## L'API (2.1)
+
+`com_cfpurge` e' un componente senza schermate: `admin/` ha `access.xml` (azioni `cfpurge.status`, `cfpurge.purge`),
+`config.xml` (il modulo dei permessi) e il service provider; `api/src/Controller/PurgeController.php` risponde alle tre
+rotte registrate da `plg_webservices_cfpurge` (`onBeforeApiRoute`). Il controller controlla l'identita' stabilita
+dall'autenticazione API di Joomla (`$user->authorise('cfpurge.purge', 'com_cfpurge')`, i Super utenti sempre; l'asset parte
+senza regole) e poi chiama `Service\ManualPurge`, lo stesso codice del riquadro nella home (connessione verificata,
+controllo degli indirizzi, 100 indirizzi, `Purger::purgeNow`). La risposta e' una risorsa JSON:API costruita con
+`ResultSerializer`. `ManualPurge::publicLast()` e' l'unica vista del log che l'API da': il token e lo Zone ID non sono
+mai parte di un risultato. Per entrare nelle API serve anche il permesso di core *Accesso ai Web Services*
+(`core.login.api`) per il gruppo. Joomla 5.0 o successivo: il pacchetto non si installa su Joomla 4 (provato su 4.4.14:
+installazione, riquadro e API funzionano, ma la modalita' mirata costruisce indirizzi sbagliati).
+
+Collaudo: scenario `api` di `scripts/e2e.py` (in joomla-dev-tools).
+
 ## 2. Ambiente di prova (Docker)
 
 `dev/cfpurge/`: Joomla 6.2.0 (o 5.4.10 con `JOOMLA_ZIP`) + PHP 8.4 + MariaDB 11.4, porta 8790
@@ -153,7 +168,7 @@ pacchetto. Le note attese sono quelle sull'elemento `<licence>` (serve alla rego
 ## 3. Compilare
 
 ```bash
-python build/build_plugin.py plugins/pkg_cfpurge     # build/out/pkg_cfpurge-2.0.0.zip
+python build/build_plugin.py plugins/pkg_cfpurge     # build/out/pkg_cfpurge-2.1.0.zip
 ```
 
 Per un pacchetto lo script costruisce prima gli zip dei figli (cartelle `extensions/<nome>`, uno per

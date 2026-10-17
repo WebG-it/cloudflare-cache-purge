@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" method="upgrade">
+    <name>com_cfpurge</name>
+    <author>Marco Galassi (WebG)</author>
+    <authorEmail>marco.galassi@webg.it</authorEmail>
+    <authorUrl>https://www.webg.it</authorUrl>
+    <creationDate>2026-10</creationDate>
+    <copyright>(C) 2026 Marco Galassi / WebG</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <licence>GNU GPL version 2 or later (GPL-2.0-or-later); see LICENSE.txt</licence>
+    <version>2.1.0</version>
+    <description>COM_CFPURGE_XML_DESCRIPTION</description>
+    <namespace path="src">WebG\Component\Cfpurge</namespace>
+    <administration>
+        <files folder="admin">
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <folder>services</folder>
+            <folder>src</folder>
+        </files>
+        <languages folder="language">
+            <language tag="en-GB">en-GB/com_cfpurge.ini</language>
+            <language tag="en-GB">en-GB/com_cfpurge.sys.ini</language>
+            <language tag="it-IT">it-IT/com_cfpurge.ini</language>
+            <language tag="it-IT">it-IT/com_cfpurge.sys.ini</language>
+        </languages>
+    </administration>
+    <api>
+        <files folder="api">
+            <folder>src</folder>
+        </files>
+    </api>
+</extension>
