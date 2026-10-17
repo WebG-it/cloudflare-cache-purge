@@ -12,9 +12,9 @@
     <version>2.0.0</version>
     <description>PKG_CFPURGE_XML_DESCRIPTION</description>
     <scriptfile>script.php</scriptfile>
-    <changelogurl>https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/changelogs/cfpurge.xml</changelogurl>
+    <changelogurl>https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/changelogs/cfpurge.xml</changelogurl>
     <updateservers>
-        <server type="collection" name="WebG Joomla Extensions">https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/collection.xml</server>
+        <server type="collection" name="Cloudflare Cache Purge">https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/collection.xml</server>
     </updateservers>
     <files folder="packages">
         <file type="plugin" id="cfpurge" group="content">plg_content_cfpurge.zip</file>
