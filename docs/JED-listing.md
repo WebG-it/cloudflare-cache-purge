@@ -18,11 +18,11 @@ La descrizione DEVE essere in inglese.
 
 | Campo | Valore |
 |-------|--------|
-| **Project homepage** * | `https://github.com/WebG-it/joomla-extensions` |
-| **Download** * | `https://github.com/WebG-it/joomla-extensions/tree/main/dist` |
+| **Project homepage** * | `https://github.com/WebG-it/cloudflare-cache-purge` |
+| **Download** * | `https://github.com/WebG-it/cloudflare-cache-purge/tree/main/dist` |
 | Demo | (vuoto) |
-| **Support** | `https://github.com/WebG-it/joomla-extensions/issues` |
-| **Documentation** | `https://github.com/WebG-it/joomla-extensions/blob/main/docs/cfpurge/USAGE.md` |
+| **Support** | `https://github.com/WebG-it/cloudflare-cache-purge/issues` |
+| **Documentation** | `https://github.com/WebG-it/cloudflare-cache-purge/blob/main/docs/cfpurge/USAGE.md` |
 | License page on your site | (vuoto — solo se a pagamento) |
 
 ## Joomla integration options
@@ -30,7 +30,7 @@ La descrizione DEVE essere in inglese.
 | Campo | Valore |
 |-------|--------|
 | **Download type** | `Free Direct Download link:` |
-| **Download URL** | `https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/pkg_cfpurge-2.0.0.zip` |
+| **Download URL** | `https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/dist/pkg_cfpurge-2.0.0.zip` |
 
 ## Options
 
@@ -86,8 +86,8 @@ This extension connects to the **Cloudflare API** (`https://api.cloudflare.com`)
 
 ### Documentation & support
 
-- User guide: https://github.com/WebG-it/joomla-extensions/blob/main/docs/cfpurge/USAGE.md
-- Developer guide: https://github.com/WebG-it/joomla-extensions/blob/main/docs/cfpurge/DEVELOPING.en.md
-- Source code & issue tracker: https://github.com/WebG-it/joomla-extensions
+- User guide: https://github.com/WebG-it/cloudflare-cache-purge/blob/main/docs/cfpurge/USAGE.md
+- Developer guide: https://github.com/WebG-it/cloudflare-cache-purge/blob/main/docs/cfpurge/DEVELOPING.en.md
+- Source code & issue tracker: https://github.com/WebG-it/cloudflare-cache-purge
 
 Released under the GNU General Public License v2 or later.
