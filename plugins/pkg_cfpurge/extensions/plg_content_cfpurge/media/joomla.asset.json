@@ -1,0 +1,21 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "plg_content_cfpurge",
+  "version": "2.0.0",
+  "description": "Assets of the Cloudflare Cache Purge content plugin (connection check in the plugin options).",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "plg_content_cfpurge.verify",
+      "type": "script",
+      "uri": "plg_content_cfpurge/verify.js",
+      "dependencies": ["core"],
+      "attributes": {"defer": true}
+    },
+    {
+      "name": "plg_content_cfpurge.verify",
+      "type": "style",
+      "uri": "plg_content_cfpurge/verify.css"
+    }
+  ]
+}

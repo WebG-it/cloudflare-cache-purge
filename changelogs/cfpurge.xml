@@ -2,6 +2,31 @@
 <!-- Changelog feed Joomla per plg_content_cfpurge. Referenziato da updates/cfpurge.xml via <changelogurl>. -->
 <changelogs>
     <changelog>
+        <element>pkg_cfpurge</element>
+        <type>package</type>
+        <version>2.0.0</version>
+        <addition>
+            <item>Box on the administrator home page (module in position cpanel): traffic light of the Cloudflare connection, button to clear the whole cache, field to clear one or more addresses, outcome of the last purge. Shown to Super Users and the user groups chosen in the options; checked on the server on every call.</item>
+            <item>Guided setup in the plugin options: where to find the Zone ID, how to create the token, and a Verify connection button that checks token, zone and purge permission and explains in plain words what is wrong; with the optional Zone Read permission it finds the Zone ID by itself.</item>
+            <item>Purge mode: the whole cache (default) or only the changed addresses (article, categories, home page, fixed extra addresses), the old address too when an article is renamed or moved.</item>
+            <item>New events, each with its own switch: categories, menu items, site modules, custom fields and tags; optionally also System > Clear Cache.</item>
+            <item>Italian language files; log file with the outcome of every purge (no token, no Zone ID).</item>
+        </addition>
+        <change>
+            <item>The plugin is now part of the package pkg_cfpurge (content plugin, system plugin, administrator module). Installing it over 1.1.4, or updating from System > Update, keeps Zone ID, token and switches. After the upgrade click Verify connection once to enable the buttons of the box.</item>
+            <item>A purge refused by Cloudflare is no longer treated as done: it is logged and shown in the box. The purge is sent once at the end of the request, in blocks of 30 addresses, with an 8 second timeout.</item>
+        </change>
+    </changelog>
+    <changelog>
+        <element>cfpurge</element>
+        <type>plugin</type>
+        <folder>content</folder>
+        <version>2.0.0</version>
+        <addition>
+            <item>Cloudflare Cache Purge is now a package (pkg_cfpurge) with a box on the administrator home page, a guided setup with a Verify connection button, a targeted purge mode, more events (categories, menu items, modules, custom fields, tags, System > Clear Cache) and Italian language files. This update installs the package over the plugin: Zone ID, token and switches are kept. After the update open the plugin options and click Verify connection once, to enable the buttons of the box.</item>
+        </addition>
+    </changelog>
+    <changelog>
         <element>cfpurge</element>
         <type>plugin</type>
         <folder>content</folder>

@@ -1,4 +1,4 @@
-# JED submission — campi pronti (plg_content_cfpurge)
+# JED submission — campi pronti (pkg_cfpurge)
 
 Valori pronti da incollare nel form "Add an extension" della Joomla Extensions Directory.
 La descrizione DEVE essere in inglese.
@@ -8,8 +8,8 @@ La descrizione DEVE essere in inglese.
 | Campo JED | Valore |
 |-----------|--------|
 | **Extension Name** | `Cloudflare Cache Purge` |
-| **Version** | `1.1.4` |
-| **Extensions File** | carica `plg_content_cfpurge-1.1.4.zip` (da `dist/`) |
+| **Version** | `2.0.0` |
+| **Extensions File** | carica `pkg_cfpurge-2.0.0.zip` (da `dist/`) |
 | My extension includes external libraries | **NO** (lasciare deselezionato) |
 | **Category** | `Hosting & Servers → Site speed` (in alternativa `Core Enhancements → Performance`) |
 | **Tags** (max 5) | cloudflare, cache, cdn, performance, purge |
@@ -22,7 +22,7 @@ La descrizione DEVE essere in inglese.
 | **Download** * | `https://github.com/WebG-it/joomla-extensions/tree/main/dist` |
 | Demo | (vuoto) |
 | **Support** | `https://github.com/WebG-it/joomla-extensions/issues` |
-| **Documentation** | `https://github.com/WebG-it/joomla-extensions/blob/main/docs/USO.md` |
+| **Documentation** | `https://github.com/WebG-it/joomla-extensions/blob/main/docs/cfpurge/USAGE.md` |
 | License page on your site | (vuoto — solo se a pagamento) |
 
 ## Joomla integration options
@@ -30,7 +30,7 @@ La descrizione DEVE essere in inglese.
 | Campo | Valore |
 |-------|--------|
 | **Download type** | `Free Direct Download link:` |
-| **Download URL** | `https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.1.4.zip` |
+| **Download URL** | `https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/pkg_cfpurge-2.0.0.zip` |
 
 ## Options
 
@@ -41,7 +41,7 @@ La descrizione DEVE essere in inglese.
 | **Compatibility** * | spunta **5.0 compatible** e **6.0 compatible** |
 | **uses_updater** * | **spunta** (integra il Joomla Update System; vedi note pre-submit) |
 | **Download Type** * | `Free download` |
-| **Extension includes** * | spunta **Plugin** |
+| **Extension includes** * | spunta **Plugin** e **Module** (e **Package** se il form lo chiede) |
 | Parent extension | (non applicabile) |
 
 ## Media
@@ -60,32 +60,34 @@ La descrizione DEVE essere in inglese.
 
 ## Description (incollare nel campo Description, inglese, markdown)
 
-**Cloudflare Cache Purge** automatically clears your Cloudflare cache whenever you create, edit, change the state of, or delete a Joomla article. When you publish or update content, your visitors — and search engine crawlers — see the fresh version immediately instead of a stale cached page.
+**Cloudflare Cache Purge** clears your Cloudflare cache when your Joomla site changes, and adds a box to the administrator home page to clear it by hand: the whole cache, or just the addresses you type. Visitors and search engine crawlers see fresh content instead of a stale cached page.
 
-It is lightweight, adds no front-end output, and is **best-effort**: if the purge call ever fails, your article save is never blocked.
+It is **best-effort**: if the purge call ever fails, your save is never blocked; the failure is logged and shown in the box.
 
 ### Features
 
-- Purges the Cloudflare cache (`purge_everything`) on article **create**, **update**, **state change** (publish / unpublish / trash) and **delete**.
-- Each of these four events can be switched **on or off** independently in the plugin parameters.
-- Works with the standard Joomla back-end workflow and with the native Joomla Web Services API.
-- One-click updates through the Joomla Update System.
-- Clean, complete uninstall — no custom database tables and no leftover files.
+- **Automatic purge** when an article, category, menu item, site module, custom field or tag is saved, changes state or is deleted. Each kind of change has its own switch.
+- **Whole cache or only the changed addresses** (article, its categories, home page, fixed extras such as the sitemap). Optionally also when you use *System > Clear Cache*.
+- **Administrator home page box**: traffic light of the Cloudflare connection, *Clear the whole cache*, a field for one or more addresses, and the outcome of the last purge. Shown only to Super Users and the user groups you choose; every request is checked on the server.
+- **Guided setup** with a *Verify connection* button: where to find the Zone ID, how to create a token with only the *Zone > Cache Purge > Purge* permission, and plain-language messages when something is wrong. With the optional *Zone > Zone > Read* permission it finds the Zone ID by itself.
+- Works with the standard back-end, the front-end article form and the Joomla Web Services API.
+- One-click updates through the Joomla Update System. English and Italian.
+- Clean, complete uninstall: no custom database tables, no leftover files (the log is removed too).
 
 ### Configuration
 
-1. Install and enable the plugin.
-2. Enter your **Cloudflare Zone ID** and an **API Token** that has the *Cache Purge → Purge* permission, scoped to your zone.
-3. Optionally choose which of the four events should trigger the purge.
+1. Install the package; it enables the plugins and publishes the box on the home page.
+2. Open *System > Plugins > Content - Cloudflare Cache Purge* and follow the four steps at the top: Zone ID, API token, paste, **Verify connection**, Save.
+3. Optionally choose what to clear and which changes trigger it.
 
 ### External service & privacy
 
-This plugin connects to the **Cloudflare API** (`https://api.cloudflare.com`) to request a cache purge for your configured zone. It sends only an authenticated purge request (your Zone ID and API token, over HTTPS). **No visitor data and no personal data are ever sent.** A Cloudflare account and a site served through Cloudflare are required for the plugin to do anything.
+This extension connects to the **Cloudflare API** (`https://api.cloudflare.com`) to verify your token and zone and to request a cache purge for your configured zone. It sends only authenticated API requests (your API token, the Zone ID and, when you purge only some pages, the public addresses of your own site), over HTTPS. **No visitor data and no personal data are ever sent.** The verification sends one purge request for an address that does not exist, to prove the token may purge. The token is stored in the plugin options and written nowhere else (not in the log). A Cloudflare account and a site served through Cloudflare are required for the extension to do anything.
 
 ### Documentation & support
 
-- User guide: https://github.com/WebG-it/joomla-extensions/blob/main/docs/USO.md
-- Developer guide: https://github.com/WebG-it/joomla-extensions/blob/main/docs/DEVELOPING.md
+- User guide: https://github.com/WebG-it/joomla-extensions/blob/main/docs/cfpurge/USAGE.md
+- Developer guide: https://github.com/WebG-it/joomla-extensions/blob/main/docs/cfpurge/DEVELOPING.en.md
 - Source code & issue tracker: https://github.com/WebG-it/joomla-extensions
 
 Released under the GNU General Public License v2 or later.

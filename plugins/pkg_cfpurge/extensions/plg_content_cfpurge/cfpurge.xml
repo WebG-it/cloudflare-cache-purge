@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="content" method="upgrade">
+    <name>PLG_CONTENT_CFPURGE</name>
+    <author>Marco Galassi (WebG)</author>
+    <authorEmail>marco.galassi@webg.it</authorEmail>
+    <authorUrl>https://www.webg.it</authorUrl>
+    <creationDate>2026-10</creationDate>
+    <copyright>(C) 2026 Marco Galassi / WebG</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <licence>GNU GPL version 2 or later (GPL-2.0-or-later); see LICENSE.txt</licence>
+    <version>2.0.0</version>
+    <description>PLG_CONTENT_CFPURGE_XML_DESCRIPTION</description>
+    <namespace path="src">WebG\Plugin\Content\Cfpurge</namespace>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/plg_content_cfpurge.ini</language>
+        <language tag="en-GB">en-GB/plg_content_cfpurge.sys.ini</language>
+        <language tag="it-IT">it-IT/plg_content_cfpurge.ini</language>
+        <language tag="it-IT">it-IT/plg_content_cfpurge.sys.ini</language>
+    </languages>
+    <files>
+        <folder plugin="cfpurge">services</folder>
+        <folder>src</folder>
+        <folder>language</folder>
+        <filename>LICENSE.txt</filename>
+    </files>
+    <media destination="plg_content_cfpurge" folder="media">
+        <filename>joomla.asset.json</filename>
+        <folder>js</folder>
+        <folder>css</folder>
+    </media>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" label="PLG_CONTENT_CFPURGE_FIELDSET_SETUP" addfieldprefix="WebG\Plugin\Content\Cfpurge\Field">
+                <field
+                    name="setup_note"
+                    type="note"
+                    class="alert alert-info"
+                    label="PLG_CONTENT_CFPURGE_SETUP_NOTE_LABEL"
+                    description="PLG_CONTENT_CFPURGE_SETUP_NOTE_DESC"
+                />
+                <field
+                    name="zone_id"
+                    type="text"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ZONE_ID_LABEL"
+                    description="PLG_CONTENT_CFPURGE_FIELD_ZONE_ID_DESC"
+                    size="50"
+                    maxlength="64"
+                    filter="cmd"
+                    autocomplete="off"
+                />
+                <field
+                    name="api_token"
+                    type="password"
+                    label="PLG_CONTENT_CFPURGE_FIELD_API_TOKEN_LABEL"
+                    description="PLG_CONTENT_CFPURGE_FIELD_API_TOKEN_DESC"
+                    size="50"
+                    autocomplete="off"
+                />
+                <field
+                    name="verify_state"
+                    type="verify"
+                    label="PLG_CONTENT_CFPURGE_FIELD_VERIFY_LABEL"
+                    filter="string"
+                />
+            </fieldset>
+            <fieldset name="events" label="PLG_CONTENT_CFPURGE_FIELDSET_EVENTS">
+                <field
+                    name="purge_mode"
+                    type="list"
+                    label="PLG_CONTENT_CFPURGE_FIELD_PURGE_MODE_LABEL"
+                    description="PLG_CONTENT_CFPURGE_FIELD_PURGE_MODE_DESC"
+                    default="all"
+                    validate="options"
+                >
+                    <option value="all">PLG_CONTENT_CFPURGE_MODE_ALL</option>
+                    <option value="targeted">PLG_CONTENT_CFPURGE_MODE_TARGETED</option>
+                </field>
+                <field
+                    name="extra_urls"
+                    type="textarea"
+                    label="PLG_CONTENT_CFPURGE_FIELD_EXTRA_URLS_LABEL"
+                    description="PLG_CONTENT_CFPURGE_FIELD_EXTRA_URLS_DESC"
+                    rows="4"
+                    cols="60"
+                    filter="string"
+                    hint="/sitemap.xml"
+                    showon="purge_mode:targeted"
+                />
+
+                <field type="spacer" name="evt_spacer" label="PLG_CONTENT_CFPURGE_FIELDSET_ARTICLES" />
+                <field name="on_create" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_CREATE_LABEL" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="on_update" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_UPDATE_LABEL" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="on_state" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_STATE_LABEL" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="on_delete" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_DELETE_LABEL" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field type="spacer" name="evt_spacer_other" label="PLG_CONTENT_CFPURGE_FIELDSET_OTHER" />
+                <field name="on_category" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_CATEGORY_LABEL" description="PLG_CONTENT_CFPURGE_FIELD_ON_OTHER_DESC" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="on_menu" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_MENU_LABEL" description="PLG_CONTENT_CFPURGE_FIELD_ON_OTHER_DESC" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="on_module" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_MODULE_LABEL" description="PLG_CONTENT_CFPURGE_FIELD_ON_OTHER_DESC" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="on_field" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_FIELD_LABEL" description="PLG_CONTENT_CFPURGE_FIELD_ON_OTHER_DESC" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="on_tag" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_TAG_LABEL" description="PLG_CONTENT_CFPURGE_FIELD_ON_OTHER_DESC" default="1">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+
+                <field type="spacer" name="evt_spacer_joomla" label="PLG_CONTENT_CFPURGE_FIELDSET_JOOMLA" />
+                <field name="on_joomla_cache" type="radio" layout="joomla.form.field.radio.switcher"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ON_JOOMLA_CACHE_LABEL" description="PLG_CONTENT_CFPURGE_FIELD_ON_JOOMLA_CACHE_DESC" default="0">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+            </fieldset>
+            <fieldset name="access" label="PLG_CONTENT_CFPURGE_FIELDSET_ACCESS">
+                <field
+                    name="allowed_groups"
+                    type="usergrouplist"
+                    label="PLG_CONTENT_CFPURGE_FIELD_ALLOWED_GROUPS_LABEL"
+                    description="PLG_CONTENT_CFPURGE_FIELD_ALLOWED_GROUPS_DESC"
+                    multiple="true"
+                    default="7,8"
+                    layout="joomla.form.field.list-fancy-select"
+                    filter="intarray"
+                />
+            </fieldset>
+        </fields>
+    </config>
+</extension>

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "mod_cfpurge",
+  "version": "2.0.0",
+  "description": "Assets of the Cloudflare Cache Purge dashboard module.",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "mod_cfpurge.box",
+      "type": "script",
+      "uri": "mod_cfpurge/box.js",
+      "dependencies": [
+        "core"
+      ],
+      "attributes": {
+        "defer": true
+      }
+    },
+    {
+      "name": "mod_cfpurge.box",
+      "type": "style",
+      "uri": "mod_cfpurge/box.css"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" method="upgrade">
+    <name>PKG_CFPURGE</name>
+    <packagename>cfpurge</packagename>
+    <author>Marco Galassi (WebG)</author>
+    <authorEmail>marco.galassi@webg.it</authorEmail>
+    <authorUrl>https://www.webg.it</authorUrl>
+    <creationDate>2026-10</creationDate>
+    <copyright>(C) 2026 Marco Galassi / WebG</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <licence>GNU GPL version 2 or later (GPL-2.0-or-later); see LICENSE.txt</licence>
+    <version>2.0.0</version>
+    <description>PKG_CFPURGE_XML_DESCRIPTION</description>
+    <scriptfile>script.php</scriptfile>
+    <changelogurl>https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/changelogs/cfpurge.xml</changelogurl>
+    <updateservers>
+        <server type="collection" name="WebG Joomla Extensions">https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/collection.xml</server>
+    </updateservers>
+    <files folder="packages">
+        <file type="plugin" id="cfpurge" group="content">plg_content_cfpurge.zip</file>
+        <file type="plugin" id="cfpurge" group="system">plg_system_cfpurge.zip</file>
+        <file type="module" id="mod_cfpurge" client="administrator">mod_cfpurge.zip</file>
+    </files>
+    <languages folder="language">
+        <language tag="en-GB">en-GB/pkg_cfpurge.sys.ini</language>
+        <language tag="it-IT">it-IT/pkg_cfpurge.sys.ini</language>
+    </languages>
+</extension>

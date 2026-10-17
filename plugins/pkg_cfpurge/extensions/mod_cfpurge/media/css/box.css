@@ -1,0 +1,21 @@
+.mod-cfpurge .mod-cfpurge__block {
+  margin-bottom: 1rem;
+}
+
+.mod-cfpurge .mod-cfpurge__state {
+  margin-bottom: 1rem;
+}
+
+.mod-cfpurge .mod-cfpurge__dot {
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-inline-end: 0.4em;
+  border-radius: 50%;
+  background: currentcolor;
+  vertical-align: baseline;
+}
+
+.mod-cfpurge .mod-cfpurge__footer {
+  margin-bottom: 0;
+}
