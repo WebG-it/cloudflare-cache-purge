@@ -152,7 +152,7 @@ API Web Services) e legge dal log del finto Cloudflare cosa ha inviato il plugin
 | `events` | articolo (crea, modifica, stato, cestino, cancella), interruttori, tre articoli in una richiesta = una chiamata, categorie, voci di menu, tag, campi, moduli del sito (evento extension) e dell'amministrazione (nessun purge) |
 | `targeted` | indirizzi esatti: articolo, categoria e genitori, home, extra, rinomina e spostamento (vecchio e nuovo), blocchi, oltre 90 indirizzi = tutta la cache |
 | `cache` | Sistema > Svuota cache: *Elimina tutto*, *Elimina*, *Elimina scaduti* (mai), interruttore spento o mai salvato |
-| `update` | server di aggiornamento locale: 1.1.4 vede un solo aggiornamento, 2.0.0 installato come pacchetto, poi una 2.0.1 offerta una volta sola, senza giri |
+| `update` | server di aggiornamento locale: 1.1.4 vede un solo aggiornamento, 2.1.1 installato come pacchetto, poi una 2.1.2 offerta una volta sola, senza giri |
 | `uninstall` | disinstallazione: nessuna estensione, file, modulo, log, riga di menu, server di aggiornamento |
 
 ### JED Checker
@@ -168,7 +168,7 @@ pacchetto. Le note attese sono quelle sull'elemento `<licence>` (serve alla rego
 ## 3. Compilare
 
 ```bash
-python build/build_plugin.py plugins/pkg_cfpurge     # build/out/pkg_cfpurge-2.1.0.zip
+python build/build_plugin.py plugins/pkg_cfpurge     # build/out/pkg_cfpurge-2.1.1.zip
 ```
 
 Per un pacchetto lo script costruisce prima gli zip dei figli (cartelle `extensions/<nome>`, uno per
@@ -178,7 +178,7 @@ stesso sorgente = stesso sha256 su ogni PC. Mai `Compress-Archive`.
 
 ## 4. Rilasciare
 
-Da `build/release-notes/cfpurge-2.0.0.md` e dal CHANGELOG:
+Da `build/release-notes/cfpurge-2.1.1.md` e dal CHANGELOG:
 
 1. Versione in **tutti** i manifest (`pkg_cfpurge.xml` e i tre dei figli) e in
    `media/joomla.asset.json` dei due con media; voce in `plugins/pkg_cfpurge/CHANGELOG.md` e in
@@ -187,26 +187,26 @@ Da `build/release-notes/cfpurge-2.0.0.md` e dal CHANGELOG:
    errori e zero avvisi).
 3. Copia lo zip in `dist/pkg_cfpurge-X.Y.Z.zip` (i vecchi `plg_content_cfpurge-*.zip` restano:
    servono al collaudo di upgrade).
-4. **`updates/cfpurge.xml`**: resta **un solo `<update>` di `type=plugin`, element `cfpurge`, folder
-   `content`** (com'e' oggi), con la nuova `<version>`, il `downloadurl` che punta allo **zip del
-   pacchetto** `dist/pkg_cfpurge-X.Y.Z.zip` e lo sha256 stampato dalla build (piu'
-   `<targetplatform name="joomla" version="(5|6)\.[0-9]+" />`, `<php_minimum>8.1</php_minimum>`).
-5. **`collection.xml`**: la riga `cfpurge` (type plugin, folder content) prende la nuova versione.
-6. Tag `cfpurge-X.Y.Z` e release GitHub con lo zip allegato e le note.
+4. **`updates/cfpurge.xml`**: due `<update>` per lo stesso zip del pacchetto (`dist/pkg_cfpurge-X.Y.Z.zip`, sha256
+   stampato dalla build, `<targetplatform name="joomla" version="(5|6)\.[0-9]+" />`, `<php_minimum>8.1</php_minimum>`):
+   - `plugin` / `cfpurge` / `content`: il ponte per i siti che hanno ancora il plugin 1.x da solo. La sua `<version>`
+     resta **2.1.1 per sempre**; di ogni rilascio cambiano solo `downloadurl` e `sha256`.
+   - `package` / `pkg_cfpurge`: porta la versione vera di ogni rilascio.
+5. **`collection.xml`**: due righe, la riga `plugin` resta a 2.1.1 per sempre, la riga `package` prende la nuova versione.
+6. Tag `vX.Y.Z` e release GitHub con lo zip allegato e le note.
 
-### Perche' basta la voce del plugin (aggiornamento dalla 1.1.4 e dopo)
+### Perche' due voci, e perche' quella del plugin non segue la versione
 
-Joomla confronta le voci del collection con le estensioni installate per `element`, `type` e
-`folder` e, quando l'utente applica l'aggiornamento, rilegge `detailsurl` e scarica lo zip indicato
-li'. Se quello zip e' il pacchetto: il pacchetto installa i figli, `plg_content_cfpurge` si aggiorna sul
-posto (stesso `extension_id`, parametri intatti) e nasce `pkg_cfpurge`; il plugin ha la stessa
-versione del pacchetto, quindi dalla release dopo la voce `plugin` torna ad offrire l'aggiornamento
-(sempre lo zip del pacchetto). Una voce `type=package` in piu' non serve (funziona lo stesso, provata
-in `scripts/e2e.py update`, ma per i siti che hanno ancora la 1.1.4 non basterebbe da sola: il
-pacchetto non e' installato e Joomla non lo offre). Provato: 1.1.4 vede un solo aggiornamento a 2.0.0,
-installato come pacchetto; poi una 2.0.1 costruita al volo e' offerta una volta sola e non si
-ripresenta. Il server di aggiornamento registrato dal pacchetto ha lo stesso indirizzo di quello del
-vecchio plugin: Joomla ne tiene uno solo, collegato a entrambi.
+Joomla confronta le voci con le estensioni installate per `element`, `type` e `folder`. Un sito con il solo plugin 1.1.4
+trova la voce `plugin` (il pacchetto non e' installato e una voce `package` non lo riguarda); quando applica
+l'aggiornamento scarica lo zip del pacchetto, i figli si installano, `plg_content_cfpurge` si aggiorna sul posto (stesso
+`extension_id`, parametri intatti) e nasce `pkg_cfpurge`. Un sito installato col pacchetto trova la voce `package`.
+Se la voce `plugin` seguisse la versione, un sito col pacchetto (il cui plugin figlio ha la versione del pacchetto)
+vedrebbe ogni rilascio **due volte** nella pagina Aggiorna (plugin e pacchetto): provato in Docker con
+`dev/common/tools/update_migration.py` (casi `cfpurge`, `cfpurge-fresh` e le varianti `-frozen`). Con la voce
+`plugin` ferma a 2.1.1: 1.1.4 vede un aggiornamento solo, dopo l'aggiornamento non ne vede altri, e ogni rilascio
+successivo e' offerto una volta sola sia ai siti migrati sia a quelli installati col pacchetto. Il pacchetto, installando,
+toglie al plugin la vecchia riga di update site del collection condiviso di joomla-extensions.
 
 ## 5. Decisioni e limiti noti
 

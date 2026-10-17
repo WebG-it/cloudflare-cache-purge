@@ -31,6 +31,11 @@ final class ManualPurge
     public const MAX_URLS = 100;
 
     /**
+     * Minimum seconds between two manual purges of the whole cache.
+     */
+    public const MIN_SECONDS = 30;
+
+    /**
      * Runs a purge.
      *
      * @param   Config                    $config  The settings.
@@ -50,7 +55,12 @@ final class ManualPurge
         $urls = null;
 
         if ($input !== null) {
-            $lines   = \is_array($input) ? $input : (preg_split('/\R/', $input) ?: []);
+            $lines = \is_array($input) ? $input : (preg_split('/\R/', $input) ?: []);
+
+            if (\count($lines) > self::MAX_URLS) {
+                return ['ok' => false, 'error' => 'too_many', 'message' => Text::_('PLG_CONTENT_CFPURGE_AJAX_TOO_MANY')];
+            }
+
             $urls    = [];
             $invalid = [];
 
@@ -87,6 +97,14 @@ final class ManualPurge
             }
         }
 
+        if ($urls === null) {
+            $wait = self::secondsToWait();
+
+            if ($wait > 0) {
+                return ['ok' => false, 'error' => 'too_soon', 'retry_after' => $wait, 'message' => Text::sprintf('PLG_CONTENT_CFPURGE_AJAX_TOO_SOON', $wait)];
+            }
+        }
+
         $outcome = Purger::purgeNow($config, $urls, $source);
 
         $message = $outcome['ok']
@@ -95,7 +113,7 @@ final class ManualPurge
 
         $last = PurgeLog::last('purge');
 
-        return ['ok' => $outcome['ok'], 'message' => $message, 'cause' => $outcome['cause'], 'count' => $urls === null ? null : \count($urls), 'last' => $last, 'lastText' => LastPurge::describe($last)];
+        return ['ok' => $outcome['ok'], 'message' => $message, 'cause' => $outcome['cause'], 'retry_after' => $outcome['cause'] === 'rate_limited' ? 60 : null, 'count' => $urls === null ? null : \count($urls), 'last' => $last, 'lastText' => LastPurge::describe($last)];
     }
 
     /**
@@ -126,7 +144,28 @@ final class ManualPurge
     }
 
     /**
-     * The last purge as a program may see it: only the facts, a short outcome text, nothing else.
+     * Seconds to wait before another manual purge of the whole cache: 30 seconds from the last one asked
+     * from the box or the API (the automatic purges of saves do not count).
+     *
+     * @return  int
+     *
+     * @since   2.1.1
+     */
+    private static function secondsToWait(): int
+    {
+        $last = PurgeLog::last('purge');
+
+        if ($last === null || ($last['scope'] ?? '') !== 'all' || !\in_array((string) ($last['src'] ?? ''), ['dashboard', 'api'], true)) {
+            return 0;
+        }
+
+        $at = strtotime((string) ($last['at'] ?? ''));
+
+        return $at === false ? 0 : max(0, self::MIN_SECONDS - (time() - $at));
+    }
+
+    /**
+     * The last purge as a program may see it: only the facts and the cause code; no user name, no Cloudflare text.
      *
      * @param   array|null  $last  The log entry.
      *
@@ -147,8 +186,6 @@ final class ManualPurge
             'count'  => (int) ($last['n'] ?? 0),
             'source' => (string) ($last['src'] ?? ''),
             'cause'  => (string) ($last['cause'] ?? ''),
-            'user'   => (string) ($last['user'] ?? ''),
-            'detail' => mb_substr((string) ($last['msg'] ?? ''), 0, 200),
         ];
     }
 }

@@ -26,7 +26,7 @@ updating from *System > Update*) is an upgrade in place, Zone ID, token and swit
 
 ## Install
 
-Download `pkg_cfpurge-2.1.0.zip` from the
+Download `pkg_cfpurge-2.1.1.zip` from the
 [releases](https://github.com/WebG-it/cloudflare-cache-purge/releases) (or [dist/](../../dist)), then
 *System > Install > Extensions > Upload Package File*. Open *System > Plugins > Content -
 Cloudflare Cache Purge* and follow the 4 steps at the top of the options.

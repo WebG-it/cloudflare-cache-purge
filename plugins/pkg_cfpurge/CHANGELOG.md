@@ -1,10 +1,11 @@
 # Changelog
 
-## 2.1.0 (2026-10-17)
+## 2.1.1 (2026-10-18)
 
-From a single plugin to a package, with a box on the administrator home page, a guided setup and an API for programs. Version 2.0.0 was built but never published: 2.1.0 is the first release of the package and contains everything of it.
+From a single plugin to a package, with a box on the administrator home page, a guided setup and an API for programs. Versions 2.0.0 and 2.1.0 were built but never published: 2.1.1 is the first release of the package and contains everything of them.
 
 New
+- Manual purge of the whole cache at most every 30 seconds (box and API; API: 429 with Retry-After); the API token field never shows the saved token; addresses only inside the site host and the verified zone; Zone IDs and tokens masked in logs; the Web Services plugin is installed OFF.
 - **Joomla Web Services API**: a program (for example a bot that publishes articles) can clear the Cloudflare cache with the Joomla API token of a user: GET /api/index.php/v1/cfpurge/status, POST /api/index.php/v1/cfpurge/all, POST /api/index.php/v1/cfpurge/urls. Who may do it is set with the new permissions of the component Cloudflare Cache Purge (Read the state, Clear the cache), by user group; Super Users always can; nobody else until you grant it. The answers never contain the Cloudflare token or the Zone ID. Same checks and limits as the box on the administrator home page. Close the API by switching off the plugin Web Services - Cloudflare Cache Purge.
 - **Box on the administrator home page** (module `mod_cfpurge`, position `cpanel`, published by
   the installer): traffic light of the connection (not configured, not verified, connected,

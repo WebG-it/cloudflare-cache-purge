@@ -198,6 +198,18 @@ final class Config
      *
      * @since   2.0.0
      */
+    public function verifiedZoneName(): string
+    {
+        $state = $this->verifyState();
+
+        return !empty($state['ok']) && isset($state['hash']) && hash_equals((string) $state['hash'], $this->fingerprint()) ? strtolower((string) ($state['zone'] ?? '')) : '';
+    }
+
+    /**
+     * @return  bool
+     *
+     * @since   2.0.0
+     */
     public function isVerified(): bool
     {
         $state = $this->verifyState();

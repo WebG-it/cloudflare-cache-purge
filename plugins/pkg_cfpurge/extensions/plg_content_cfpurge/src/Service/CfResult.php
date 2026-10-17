@@ -100,6 +100,11 @@ final class CfResult
             return 'HTTP ' . $this->http;
         }
 
-        return 'HTTP ' . $this->http . ($this->code ? ' code ' . $this->code : '') . ($this->message !== '' ? ': ' . mb_substr($this->message, 0, 160) : '');
+        $text = 'HTTP ' . $this->http . ($this->code ? ' code ' . $this->code : '') . ($this->message !== '' ? ': ' . mb_substr($this->message, 0, 160) : '');
+
+        // A Zone ID (32 hex) or anything that looks like a token never goes into a log line or an answer.
+        $text = (string) preg_replace('/\b[a-f0-9]{32}\b/i', '[zone]', $text);
+
+        return (string) preg_replace('/[A-Za-z0-9_\-]{36,}/', '[token]', $text);
     }
 }

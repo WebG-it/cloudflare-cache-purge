@@ -8,7 +8,7 @@
     <copyright>(C) 2026 Marco Galassi / WebG</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <licence>GNU GPL version 2 or later (GPL-2.0-or-later); see LICENSE.txt</licence>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
     <description>PLG_CONTENT_CFPURGE_XML_DESCRIPTION</description>
     <namespace path="src">WebG\Plugin\Content\Cfpurge</namespace>
     <languages folder="language">
@@ -50,7 +50,7 @@
                 />
                 <field
                     name="api_token"
-                    type="password"
+                    type="token"
                     label="PLG_CONTENT_CFPURGE_FIELD_API_TOKEN_LABEL"
                     description="PLG_CONTENT_CFPURGE_FIELD_API_TOKEN_DESC"
                     size="50"

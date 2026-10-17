@@ -107,11 +107,16 @@ class PurgeController extends BaseController
         if (!$result['ok']) {
             // not_verified, empty, invalid, too_many: the caller's fault or the setup; Cloudflare failure: bad gateway.
             $error = (string) ($result['error'] ?? 'cloudflare');
-            $code  = match ($error) {
-                'not_verified' => 409,
-                'cloudflare'   => 502,
-                default        => 422,
+            $code  = match (true) {
+                $error === 'not_verified'                                       => 409,
+                $error === 'too_soon' || ($result['cause'] ?? '') === 'rate_limited' => 429,
+                $error === 'cloudflare'                                         => 502,
+                default                                                         => 422,
             };
+
+            if ($code === 429) {
+                $this->app->setHeader('Retry-After', (string) max(1, (int) ($result['retry_after'] ?? 60)));
+            }
 
             $this->answer('purge', $this->publicResult($result), $code);
 
@@ -135,7 +140,8 @@ class PurgeController extends BaseController
         $out = [
             'ok'      => (bool) $result['ok'],
             'message' => (string) ($result['message'] ?? ''),
-            'cause'   => (string) ($result['cause'] ?? ($result['error'] ?? '')),
+            'cause'   => (string) ($result['error'] ?? ($result['cause'] ?? '')),
+            'retry_after' => $result['retry_after'] ?? null,
             'count'   => $result['count'] ?? null,
             'last'    => ManualPurge::publicLast($result['last'] ?? null),
         ];

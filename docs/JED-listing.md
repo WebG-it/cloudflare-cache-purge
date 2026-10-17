@@ -1,4 +1,4 @@
-# JED submission — campi pronti (pkg_cfpurge)
+# JED submission: campi pronti (pkg_cfpurge)
 
 Valori pronti da incollare nel form "Add an extension" della Joomla Extensions Directory.
 La descrizione DEVE essere in inglese.
@@ -8,8 +8,8 @@ La descrizione DEVE essere in inglese.
 | Campo JED | Valore |
 |-----------|--------|
 | **Extension Name** | `Cloudflare Cache Purge` |
-| **Version** | `2.0.0` |
-| **Extensions File** | carica `pkg_cfpurge-2.1.0.zip` (da `dist/`) |
+| **Version** | `2.1.1` |
+| **Extensions File** | carica `pkg_cfpurge-2.1.1.zip` (da `dist/`) |
 | My extension includes external libraries | **NO** (lasciare deselezionato) |
 | **Category** | `Hosting & Servers → Site speed` (in alternativa `Core Enhancements → Performance`) |
 | **Tags** (max 5) | cloudflare, cache, cdn, performance, purge |
@@ -23,14 +23,14 @@ La descrizione DEVE essere in inglese.
 | Demo | (vuoto) |
 | **Support** | `https://github.com/WebG-it/cloudflare-cache-purge/issues` |
 | **Documentation** | `https://github.com/WebG-it/cloudflare-cache-purge/blob/main/docs/cfpurge/USAGE.md` |
-| License page on your site | (vuoto — solo se a pagamento) |
+| License page on your site | (vuoto, solo se a pagamento) |
 
 ## Joomla integration options
 
 | Campo | Valore |
 |-------|--------|
 | **Download type** | `Free Direct Download link:` |
-| **Download URL** | `https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/dist/pkg_cfpurge-2.1.0.zip` |
+| **Download URL** | `https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/dist/pkg_cfpurge-2.1.1.zip` |
 
 ## Options
 
@@ -50,7 +50,7 @@ La descrizione DEVE essere in inglese.
 |-------|--------|
 | Video | (vuoto) |
 | **Logo** * | carica `assets/cfpurge-jed-logo.png` (1200×525, 16:7) |
-| Images (screenshot) | opzionale — uno screenshot del pannello parametri del plugin aiuta |
+| Images (screenshot) | opzionale: uno screenshot del pannello parametri del plugin aiuta |
 
 ## Note pre-submission
 - **JED Checker**: prima di inviare, esegui il [JED Checker](https://extensions.joomla.org/extension/jedchecker) sullo zip (è una checkbox richiesta da `uses_updater`).

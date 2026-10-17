@@ -3,7 +3,8 @@
   Update server of Cloudflare Cache Purge: a collection with a single row. Joomla keeps the TYPE of the update site a site
   already had, so sites that came from the old shared WebG collection stay 'collection': this file is a
   collection too. The row says which version is current; the details (download, sha256) are in updates/cfpurge.xml.
-  At every release change version here and in updates/ (and never reuse a version number).
+  At every release change the version of the package row here and in updates/ (and never reuse a version number).
+  The plugin row (bridge for the standalone plugin 1.x) keeps version 2.1.1 for ever: see the comment in updates/cfpurge.xml.
   PUBLIC repository: never put tokens, passwords or keys in it.
 -->
 <extensionset name="Cloudflare Cache Purge" description="Plugin Joomla sviluppato da WebG">
@@ -12,6 +13,12 @@
         element="cfpurge"
         type="plugin"
         folder="content"
-        version="2.1.0"
+        version="2.1.1"
+        detailsurl="https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/updates/cfpurge.xml" />
+    <extension
+        name="Cloudflare Cache Purge"
+        element="pkg_cfpurge"
+        type="package"
+        version="2.1.1"
         detailsurl="https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/updates/cfpurge.xml" />
 </extensionset>

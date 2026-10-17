@@ -103,20 +103,21 @@ entries, fixed dates, LF text files: same source, same sha256 on every PC.
    `plugins/pkg_cfpurge/CHANGELOG.md`, `changelogs/cfpurge.xml`.
 2. Build, run `scripts/e2e.py` on Joomla 6.2 and 5.4, JED Checker `master` and `develop`.
 3. Zip into `dist/pkg_cfpurge-X.Y.Z.zip`.
-4. `updates/cfpurge.xml`: keep **a single `<update>` of `type=plugin`, element `cfpurge`, folder
-   `content`** (as today), with the new `<version>`, the `downloadurl` pointing to the **package zip**
-   `dist/pkg_cfpurge-X.Y.Z.zip`, its sha256, targetplatform `(5|6)\.[0-9]+`, `<php_minimum>8.1</php_minimum>`.
-5. `collection.xml`: the `cfpurge` row (type plugin, folder content) gets the new version.
-6. Tag `cfpurge-X.Y.Z` and a GitHub release with the zip and the notes
-   (`build/release-notes/cfpurge-X.Y.Z.md`).
+4. `updates/cfpurge.xml`: two `<update>` entries for the same package zip (`dist/pkg_cfpurge-X.Y.Z.zip`, its sha256,
+   targetplatform `(5|6)\.[0-9]+`, `<php_minimum>8.1</php_minimum>`):
+   - `plugin` / `cfpurge` / `content`: the bridge for sites that still have the standalone plugin 1.x. Its `<version>`
+     stays **2.1.1 for ever**; at each release only its `downloadurl` and `sha256` change.
+   - `package` / `pkg_cfpurge`: carries the real version of every release.
+5. `collection.xml`: two rows; the `plugin` row stays at 2.1.1 for ever, the `package` row gets the new version.
+6. Tag `vX.Y.Z` and a GitHub release with the zip and the notes (`build/release-notes/cfpurge-X.Y.Z.md`).
 
-**Why the plugin row is enough** (update from 1.1.4 and later): Joomla matches collection rows with
-installed extensions by element, type and folder; when the update is applied it reads `detailsurl`
-and downloads the zip listed there. If that zip is the package, it installs the children, the
-plugin upgrades in place (same extension id, parameters kept) and `pkg_cfpurge` is created; the
-plugin carries the package version, so the next release is offered again through the same row. An
-extra `type=package` row also works (tested by `e2e.py update`) but would not be enough alone: a site
-with only the old plugin has no package installed, and Joomla would not offer it. Verified: 1.1.4
-sees one update to 2.0.0, installed as the package; a 2.0.1 built on the fly is then offered once and
-does not come back. The package registers the same update server address as the old plugin:
-Joomla keeps one update site linked to both.
+**Why two entries, and why the plugin one does not follow the version**: Joomla matches entries with installed
+extensions by element, type and folder. A site with only the plugin 1.1.4 finds the `plugin` entry (no package is installed,
+a `package` entry is not about it); applying the update downloads the package zip, the children install, the plugin
+upgrades in place (same extension id, parameters kept) and `pkg_cfpurge` is created. A site installed with the package finds
+the `package` entry. If the `plugin` entry followed the version, a package site (whose child plugin carries the package
+version) would see every release **twice** on the Update page (plugin and package): shown in Docker with
+`dev/common/tools/update_migration.py` (cases `cfpurge`, `cfpurge-fresh` and the `-frozen` variants). With the `plugin` entry
+frozen at 2.1.1: 1.1.4 sees one update, none afterwards, and every later release is offered once, to migrated sites and to
+package installs alike. When installing, the package removes from the plugin the old update site row of the shared
+collection of joomla-extensions.

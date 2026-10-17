@@ -50,6 +50,25 @@ final class Targets
      *
      * @since   2.0.0
      */
+    public static function hostAllowed(string $host): bool
+    {
+        $host = strtolower($host);
+
+        if ($host === '' || $host !== self::host()) {
+            return false;
+        }
+
+        // With the Zone Read permission the verification knows the name of the zone: the host must be inside it.
+        $zone = Config::load()?->verifiedZoneName() ?? '';
+
+        return $zone === '' || $host === $zone || str_ends_with($host, '.' . $zone);
+    }
+
+    /**
+     * @return  string
+     *
+     * @since   2.0.0
+     */
     public static function host(): string
     {
         return strtolower((string) Uri::getInstance(self::root())->getHost());
@@ -84,7 +103,7 @@ final class Targets
         if (preg_match('#^https?://#i', $input)) {
             $uri = Uri::getInstance($input);
 
-            if (strtolower((string) $uri->getHost()) !== self::host() || $uri->getUser() !== null && $uri->getUser() !== '') {
+            if (!self::hostAllowed((string) $uri->getHost()) || $uri->getUser() !== null && $uri->getUser() !== '') {
                 return null;
             }
 
@@ -92,6 +111,10 @@ final class Targets
         }
 
         if ($input[0] === '/' && !str_starts_with($input, '//')) {
+            if (!self::hostAllowed(self::host())) {
+                return null;
+            }
+
             return rtrim(self::root(), '/') . $input;
         }
 
@@ -252,7 +275,7 @@ final class Targets
             return null;
         }
 
-        if (strtolower((string) Uri::getInstance($url)->getHost()) !== self::host()) {
+        if (!self::hostAllowed((string) Uri::getInstance($url)->getHost())) {
             return null;
         }
 

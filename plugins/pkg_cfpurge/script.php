@@ -97,11 +97,8 @@ class Pkg_CfpurgeInstallerScript extends InstallerScript
             $this->enable('plugin', 'cfpurge', 'system');
         }
 
-        // The API plugin is inert until a Super User gives somebody the permission in the options of
-        // com_cfpurge and that person has a Joomla API token: switching it on is safe.
-        if (empty($this->had['webservices'])) {
-            $this->enable('plugin', 'cfpurge', 'webservices');
-        }
+        // The Web Services plugin stays OFF: whoever wants the API switches it on (and gives the permission).
+        $this->dropLegacyUpdateSite();
 
         if (empty($this->had['module'])) {
             $this->createModule();
@@ -146,6 +143,50 @@ class Pkg_CfpurgeInstallerScript extends InstallerScript
         }
 
         return true;
+    }
+
+    /**
+     * Joomla keeps the update site that the old standalone plugin registered (the shared WebG
+     * collection of the joomla-extensions repository), while the package registers its own. Unlink
+     * the plugin from the old one and delete that site when nothing else uses it, so that the old
+     * address can disappear one day without leaving errors behind. Other WebG extensions that use
+     * the same old site keep it.
+     *
+     * @return  void
+     *
+     * @since   2.1.1
+     */
+    private function dropLegacyUpdateSite(): void
+    {
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $id = $this->extensionId('plugin', 'cfpurge', 'content');
+
+        if ($id <= 0) {
+            return;
+        }
+
+        $query = $db->getQuery(true)
+            ->select($db->quoteName('us.update_site_id'))
+            ->from($db->quoteName('#__update_sites', 'us'))
+            ->join('INNER', $db->quoteName('#__update_sites_extensions', 'x') . ' ON ' . $db->quoteName('x.update_site_id') . ' = ' . $db->quoteName('us.update_site_id'))
+            ->where($db->quoteName('x.extension_id') . ' = ' . $id)
+            ->where($db->quoteName('us.location') . ' LIKE ' . $db->quote('%/WebG-it/joomla-extensions/%'));
+
+        foreach ($db->setQuery($query)->loadColumn() as $siteId) {
+            $siteId = (int) $siteId;
+
+            $db->setQuery($db->getQuery(true)->delete($db->quoteName('#__update_sites_extensions'))
+                ->where($db->quoteName('update_site_id') . ' = ' . $siteId)
+                ->where($db->quoteName('extension_id') . ' = ' . $id))->execute();
+
+            $left = (int) $db->setQuery($db->getQuery(true)->select('COUNT(*)')->from($db->quoteName('#__update_sites_extensions'))
+                ->where($db->quoteName('update_site_id') . ' = ' . $siteId))->loadResult();
+
+            if ($left === 0) {
+                $db->setQuery($db->getQuery(true)->delete($db->quoteName('#__updates'))->where($db->quoteName('update_site_id') . ' = ' . $siteId))->execute();
+                $db->setQuery($db->getQuery(true)->delete($db->quoteName('#__update_sites'))->where($db->quoteName('update_site_id') . ' = ' . $siteId))->execute();
+            }
+        }
     }
 
     /**

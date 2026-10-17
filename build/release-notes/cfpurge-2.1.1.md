@@ -1,12 +1,12 @@
-## Cloudflare Cache Purge 2.1.0
+## Cloudflare Cache Purge 2.1.1
 
 From a single plugin to a package: a box on the administrator home page to clear the Cloudflare
 cache by hand, a guided setup with a connection check, more cases covered, and an API so that a program
-can clear the cache. Version 2.0.0 was built but never published: this is the first release of the package. Update from
+can clear the cache. Versions 2.0.0 and 2.1.0 were built but never published: 2.1.1 is the first release of the package and contains everything of them. Update from
 *System > Update > Extensions*, or install the package over the old plugin.
 
 **New**
-- **Web Services API for programs**: with the Joomla API token of a user you allow, a bot can read the state (`GET /api/index.php/v1/cfpurge/status`), clear the whole cache (`POST .../v1/cfpurge/all`) or some addresses (`POST .../v1/cfpurge/urls` with `{"urls": ["/page", ...]}`). Permissions by user group in the Options of the component *Cloudflare Cache Purge* (*Read the state*, *Clear the cache*); Super Users always can, nobody else until you grant it. The answers never contain the Cloudflare token or the Zone ID. Same checks and limits as the box (100 addresses, verified connection). Switch off the plugin *Web Services - Cloudflare Cache Purge* to close it. The user's group also needs the Joomla permission *Web Services Login*.
+- **Web Services API for programs**: with the Joomla API token of a user you allow, a bot can read the state (`GET /api/index.php/v1/cfpurge/status`), clear the whole cache (`POST .../v1/cfpurge/all`) or some addresses (`POST .../v1/cfpurge/urls` with `{"urls": ["/page", ...]}`). Permissions by user group in the Options of the component *Cloudflare Cache Purge* (*Read the state*, *Clear the cache*); Super Users always can, nobody else until you grant it. The answers never contain the Cloudflare token or the Zone ID. Same checks and limits as the box (100 addresses, verified connection). The plugin *Web Services - Cloudflare Cache Purge* is installed **off**: switch it on (*System > Plugins*, group *Web Services*) to open the API, off to close it. The user's group also needs the Joomla permission *Web Services Login*.
 - **Box on the administrator home page**: traffic light of the Cloudflare connection, *Clear the
   whole cache*, a field to clear one or more addresses (one per line), the outcome of the last
   purge. For Super Users and the user groups chosen in the options; checked on the server on every
@@ -21,6 +21,12 @@ can clear the cache. Version 2.0.0 was built but never published: this is the fi
 - **More events**, each with its own switch: categories, menu items, site modules, custom fields,
   tags; optionally also *System > Clear Cache*.
 - Log of every purge in `administrator/logs/plg_content_cfpurge.php` (no token, no Zone ID).
+
+**Safer**
+- Manual purges of the whole cache (box and API) are limited to one every 30 seconds; the API answers 429 with `Retry-After` (also when Cloudflare asks to slow down). More than 100 addresses are refused before they are read.
+- The token field of the options never prints the saved token back: it says that one is saved; empty keeps it, typing replaces it. Use a token with only *Zone > Cache Purge > Purge* on the single zone of the site.
+- Addresses are accepted only for the host of the site and, after *Verify connection* with the optional Zone Read permission, only inside the verified zone. If the site answers under several host names, set `live_site` in the Joomla configuration file. Zone IDs and tokens are masked in log lines and messages; API answers carry no user names and no Cloudflare text, only the cause code.
+- Installing or updating the package removes the old update-site row of the standalone plugin (the shared collection of joomla-extensions); other WebG extensions that use it keep it.
 
 **Changed**
 - Packaging also contains the API component `com_cfpurge` and the plugin `plg_webservices_cfpurge`.

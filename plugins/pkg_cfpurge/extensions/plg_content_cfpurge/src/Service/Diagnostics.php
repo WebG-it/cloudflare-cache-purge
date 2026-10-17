@@ -248,6 +248,7 @@ final class Diagnostics
             'hash' => $config->fingerprint($zone, $token),
             'at'   => gmdate('Y-m-d H:i:s'),
             'user' => $user,
+            'zone' => (string) $zoneName,
             'key'  => $ok ? 'OK' : (string) (array_values(array_filter($checks, static fn ($c) => $c['status'] === self::FAIL))[0]['key'] ?? 'FAIL'),
         ];
 

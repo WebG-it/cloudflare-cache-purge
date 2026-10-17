@@ -29,7 +29,7 @@ on Joomla 6.2.0 and 5.4.10 with PHP 8.4.
 
 ## 2. Install
 
-*System > Install > Extensions > Upload Package File*, drop `pkg_cfpurge-2.1.0.zip`
+*System > Install > Extensions > Upload Package File*, drop `pkg_cfpurge-2.1.1.zip`
 (from the [releases](https://github.com/WebG-it/cloudflare-cache-purge/releases)). The installer
 switches everything on and puts the box on the home page.
 
@@ -52,8 +52,10 @@ The plugin needs two things from Cloudflare. The plugin options explain them too
 2. Name it, for example `joomla-cache-purge-yourdomain`.
 3. Permissions: **Zone > Cache Purge > Purge** (required). Optional: **Zone > Zone > Read**: with it
    the plugin can find the Zone ID by itself and check that it is the one of this site.
-4. Zone Resources: **Include > Specific zone** > your domain.
+4. Zone Resources: **Include > Specific zone** > your domain (never a token for all zones: it only needs this one).
 5. **Create Token** and copy it: Cloudflare shows it only once.
+
+The token is stored in the database like every plugin parameter. The options screen never shows it again: it says that a token is saved. Leave the field empty to keep it, type a new one to replace it.
 
 ## 4. Set up the plugin
 
@@ -124,8 +126,8 @@ always can). The automatic purge does not depend on this.
   accepts 30 addresses per call: more are sent in blocks, above 90 the whole cache is cleared.
 - **The log** is `administrator/logs/plg_content_cfpurge.php`: one line per purge or check, no
   token, no Zone ID, rotated above 1 MB.
-- **The token** is stored in the plugin options, like in the old versions, and is sent only to
-  `api.cloudflare.com`.
+- **The token** is stored in the plugin parameters (the database), like in the old versions, is never printed back in the options page, and is sent only to `api.cloudflare.com`. Use a token with only *Zone > Cache Purge > Purge* on the single zone of the site.
+- **Clearing the whole cache** by hand (box or API) can be done once every 30 seconds.
 - Changes made directly in the database (not through Joomla) do not raise events: use the box.
 - An article that becomes visible **by itself** at its *Start Publishing* date (or disappears at its
   *Finish Publishing* date) raises no event either: clear it by hand, or keep short cache times in
@@ -139,8 +141,8 @@ the Cloudflare token and the Zone ID never appear in an answer.
 
 **Set up, once**
 
-1. The plugin *Web Services - Cloudflare Cache Purge* is switched on by the installer (switch it off to
-   close the API). *System > Plugins*, group *Web Services*.
+1. The plugin *Web Services - Cloudflare Cache Purge* is installed **off**: until you switch it on (*System >
+   Plugins*, group *Web Services*) the API does not exist. Switch it off again to close the API.
 2. Choose who may use it: *System > Global Configuration > Cloudflare Cache Purge* (or the Options of the
    component, `index.php?option=com_config&view=component&component=com_cfpurge`), tab *Permissions*, two
    actions per user group: **Read the state (API)** and **Clear the Cloudflare cache (API)**. Super Users
@@ -160,9 +162,9 @@ the Cloudflare token and the Zone ID never appear in an answer.
 
 Addresses are checked like in the box: only addresses of this site, up to 100, duplicates removed.
 Answers are JSON:API (`{"data": {"type": "cfpurge", "id": "purge", "attributes": {...}}}`) with `ok`,
-`message`, `cause`, `count` and `last` (when, who, what, outcome). Status codes: 200 done; 400 body
+`message`, `cause`, `count` and `last` (when, what, outcome; no user names). Status codes: 200 done; 400 body
 without `urls`; 401 not logged in or wrong token; 403 no permission; 404 API closed; 409 connection not
-verified or plugin off; 422 invalid, empty or too many addresses; 502 Cloudflare refused (see `cause`).
+verified or plugin off; 422 invalid, empty or too many addresses; 429 the whole cache was cleared less than 30 seconds ago, or Cloudflare asks to slow down (header `Retry-After`); 502 Cloudflare refused (see `cause`).
 Every call is written to the plugin log with the user and the source `api`.
 
 ## 9. Update and uninstall
@@ -181,6 +183,7 @@ language files, the log and the update server. There are no database tables.
 | *Cloudflare refuses the purge (HTTP 403, code 10000)* | The token lacks **Zone > Cache Purge > Purge**, or it is not allowed on this zone. Create a new token as in step 3. |
 | *Cloudflare does not know this Zone ID* | Copy it again from the Overview page of the domain. |
 | *This Zone ID belongs to the zone X, which does not cover this site* | You pasted the Zone ID of another domain: use the proposed one. |
+| *An address is refused as not belonging to this site* | Addresses must use the host of the site, inside the zone found by Verify connection. If the site answers under several host names (www and without, a test address), set `live_site` in the Joomla configuration file and verify again. |
 | *Cloudflare cannot be reached from this server* | The hosting blocks outgoing HTTPS calls to `api.cloudflare.com`. |
 | The box is not on the home page | You are not in an allowed group, or the module was unpublished: *System > Administrator Modules*, *Cloudflare Cache Purge*, position `cpanel`. |
 | A change is not cleared | Check that the plugin (and, for modules and *Clear Cache*, the system plugin) is enabled, that the switch of that kind of change is on, and read the log. |

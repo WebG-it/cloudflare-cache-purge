@@ -29,7 +29,7 @@ Provato su Joomla 6.2.0 e 5.4.10 con PHP 8.4.
 
 ## 2. Installare
 
-*Sistema > Installa > Estensioni > Carica file pacchetto*, trascina `pkg_cfpurge-2.1.0.zip` (dalle
+*Sistema > Installa > Estensioni > Carica file pacchetto*, trascina `pkg_cfpurge-2.1.1.zip` (dalle
 [release](https://github.com/WebG-it/cloudflare-cache-purge/releases)). L'installazione accende tutto e
 mette il riquadro nella home.
 
@@ -54,7 +54,7 @@ Al plugin servono due cose di Cloudflare. Le spiega anche il plugin, in cima all
 3. Permessi (nella pagina di Cloudflare si scelgono con questi nomi): **Zone > Cache Purge >
    Purge** (obbligatorio). Facoltativo: **Zone > Zone > Read**: con questo il plugin trova da solo lo
    Zone ID e controlla che sia quello di questo sito.
-4. Zone Resources: **Include > Specific zone** > il tuo dominio.
+4. Zone Resources: **Include > Specific zone** > il tuo dominio (mai un token per tutte le zone: serve solo questa).
 5. **Create Token** e copialo: Cloudflare lo mostra una sola volta.
 
 ## 4. Configurare il plugin
@@ -129,7 +129,7 @@ Super Utenti possono sempre). Il purge automatico non dipende da questa scelta.
   si svuota tutta la cache.
 - **Il log** è `administrator/logs/plg_content_cfpurge.php`: una riga per purge o verifica, senza
   token e senza Zone ID, ruotato sopra 1 MB.
-- **Il token** sta nelle opzioni del plugin, come nelle versioni vecchie, e viene inviato solo a
+- **Il token** sta nei parametri del plugin (il database), come nelle versioni vecchie, non viene mai rimostrato nella pagina delle opzioni (c'è scritto che un token è salvato: campo vuoto lo tiene, un token nuovo lo sostituisce) e viene inviato solo a
   `api.cloudflare.com`.
 - Le modifiche fatte direttamente nel database (non da Joomla) non fanno scattare gli eventi: usa
   il riquadro.
@@ -145,8 +145,8 @@ esposto altro: il token di Cloudflare e lo Zone ID non compaiono mai in una risp
 
 **Da fare, una volta**
 
-1. Il plugin *Web Services - Cloudflare Cache Purge* è acceso dall'installazione (spegnilo per chiudere
-   l'API). *Sistema > Plugin*, gruppo *Web Services*.
+1. Il plugin *Web Services - Cloudflare Cache Purge* viene installato **spento**: finché non lo accendi (*Sistema >
+   Plugin*, gruppo *Web Services*) l'API non esiste. Spegnilo di nuovo per chiuderla.
 2. Scegli chi può usarlo: *Sistema > Configurazione globale > Cloudflare Cache Purge* (oppure le Opzioni del
    componente, `index.php?option=com_config&view=component&component=com_cfpurge`), scheda *Permessi*, due
    azioni per gruppo di utenti: **Leggere lo stato (API)** e **Svuotare la cache di Cloudflare (API)**. I
@@ -167,9 +167,9 @@ esposto altro: il token di Cloudflare e lo Zone ID non compaiono mai in una risp
 
 Gli indirizzi si controllano come nel riquadro: solo indirizzi di questo sito, al massimo 100, doppioni tolti.
 Le risposte sono JSON:API (`{"data": {"type": "cfpurge", "id": "purge", "attributes": {...}}}`) con `ok`,
-`message`, `cause`, `count` e `last` (quando, chi, cosa, esito). Codici: 200 fatto; 400 corpo senza `urls`;
+`message`, `cause`, `count` e `last` (quando, cosa, esito; niente nomi utente). Codici: 200 fatto; 400 corpo senza `urls`;
 401 non autenticato o token sbagliato; 403 senza permesso; 404 API chiusa; 409 connessione non verificata o
-plugin spento; 422 indirizzi non validi, vuoti o troppi; 502 Cloudflare ha rifiutato (vedi `cause`). Ogni
+plugin spento; 422 indirizzi non validi, vuoti o troppi; 429 tutta la cache è stata svuotata meno di 30 secondi fa, oppure Cloudflare chiede di rallentare (intestazione `Retry-After`); 502 Cloudflare ha rifiutato (vedi `cause`). Ogni
 chiamata finisce nel log del plugin con l'utente e l'origine `api`.
 
 ## 9. Aggiornare e disinstallare
@@ -189,6 +189,7 @@ log e il server di aggiornamento. Non ci sono tabelle nel database.
 | *Cloudflare rifiuta il purge (HTTP 403, code 10000)* | Al token manca **Zone > Cache Purge > Purge**, oppure non è abilitato su questa zona. Crea un token nuovo come al passo 3. |
 | *Cloudflare non conosce questo Zone ID* | Copialo di nuovo dalla pagina Panoramica del dominio. |
 | *Questo Zone ID appartiene alla zona X, che non copre questo sito* | Hai incollato lo Zone ID di un altro dominio: usa quello proposto. |
+| *Un indirizzo viene rifiutato perché non è di questo sito* | Gli indirizzi devono usare l'host del sito, dentro la zona trovata da Verifica connessione. Se il sito risponde con più nomi (con e senza www, un indirizzo di prova), imposta `live_site` nel file di configurazione di Joomla e verifica di nuovo. |
 | *Da questo server non si raggiunge Cloudflare* | L'hosting blocca le chiamate HTTPS in uscita verso `api.cloudflare.com`. |
 | Il riquadro non è nella home | Non sei in un gruppo ammesso, oppure il modulo è stato spubblicato: *Sistema > Moduli amministratore*, *Cloudflare Cache Purge*, posizione `cpanel`. |
 | Una modifica non viene svuotata | Controlla che il plugin (e, per i moduli e *Svuota cache*, il plugin di sistema) sia abilitato, che l'interruttore di quel tipo di modifica sia acceso, e leggi il log. |
