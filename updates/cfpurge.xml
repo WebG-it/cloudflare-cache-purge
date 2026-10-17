@@ -11,9 +11,9 @@
         <maintainer>Marco Galassi (WebG)</maintainer>
         <maintainerurl>https://www.webg.it</maintainerurl>
         <infourl title="WebG">https://www.webg.it</infourl>
-        <changelogurl>https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/changelogs/cfpurge.xml</changelogurl>
+        <changelogurl>https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/changelogs/cfpurge.xml</changelogurl>
         <downloads>
-            <downloadurl type="full" format="zip">https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.1.4.zip</downloadurl>
+            <downloadurl type="full" format="zip">https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/dist/plg_content_cfpurge-1.1.4.zip</downloadurl>
         </downloads>
         <sha256>b339cf8a8eed3df8218ab6ec68f91e0f891eb36f3cf455ad33068a864e2297f3</sha256>
         <tags>

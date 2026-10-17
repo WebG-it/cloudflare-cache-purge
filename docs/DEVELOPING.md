@@ -1,5 +1,7 @@
 # Guida sviluppatore — plg_content_cfpurge
 
+> **Strumenti.** L'ambiente Docker di prova (`dev/...`), lo script di build (`build/build_plugin.py`) e gli helper del JED Checker non stanno in questo repository: sono in [joomla-dev-tools](https://github.com/WebG-it/joomla-dev-tools). I percorsi `dev/` e `build/` qui sotto si riferiscono a quel repository (clonalo accanto a questo). L'update server di questo plugin e' `collection.xml` (rimanda a `updates/cfpurge.xml`) in questo repository.
+
 Documentazione **tecnica**, destinata a uno **sviluppatore o a un'AI** che deve modificare,
 compilare o rilasciare il plugin. Tratta codice, build dello zip e processo di rilascio.
 
@@ -106,15 +108,26 @@ Se compare un `\` → zip sbagliato, rifallo.
 
 ## 4. Rilasciare una nuova versione (update server)
 
-Gli update sono serviti dal repo `WebG-it/joomla-extensions` (collection update server).
+L'update server di questo plugin sta in questo repository: `collection.xml` (una riga, tipo
+`collection`, servito da `raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/collection.xml`
+e dichiarato nel manifest in `<updateservers>`) che rimanda a `updates/cfpurge.xml` (versione, download,
+sha256). Il tipo e' `collection` perche' Joomla, aggiornando, cambia solo l'indirizzo della riga di
+update site che il sito ha gia' e ne conserva il tipo: i siti arrivati dal vecchio collection condiviso
+resterebbero ciechi su un file di tipo `extension`.
 
-1. Bump `<version>` in `cfpurge.xml` + ricompila lo zip (sez. 3).
-2. Metti lo zip in `dist/plg_content_cfpurge-X.Y.Z.zip`.
-3. Aggiorna `version` e `downloadurl` in `updates/cfpurge.xml`.
-4. Aggiorna `version` in `collection.xml`.
+1. Bump `<version>` nei manifest: ogni modifica a uno zip fa avanzare la versione, mai due zip
+   diversi con lo stesso numero. Voce in `changelogs/cfpurge.xml` e note in
+   `build/release-notes/cfpurge-X.Y.Z.md`.
+2. Compila con `python build/build_plugin.py <cartella>` (script di joomla-dev-tools): zip
+   riproducibile con sha256 stampato.
+3. Metti lo zip in `dist/`.
+4. Aggiorna `updates/cfpurge.xml` (`version`, `downloadurl` sul file in `dist/`, che esiste al push,
+   `sha256`) e la `version` della riga in `collection.xml`.
+5. JED Checker (`master` e `develop`) e prova di aggiornamento in Docker con gli strumenti di
+   joomla-dev-tools.
+6. Tag `vX.Y.Z` e GitHub Release con lo zip e le note.
 
-I siti vedono l'update in *Sistema → Aggiorna*. Per aggiungere un plugin NUOVO al server:
-vedi il `README.md` del repo (3 mosse).
+I siti vedono l'update in *Sistema → Aggiorna*.
 
 ---
 

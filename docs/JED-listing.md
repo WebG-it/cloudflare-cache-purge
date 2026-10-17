@@ -18,11 +18,11 @@ La descrizione DEVE essere in inglese.
 
 | Campo | Valore |
 |-------|--------|
-| **Project homepage** * | `https://github.com/WebG-it/joomla-extensions` |
-| **Download** * | `https://github.com/WebG-it/joomla-extensions/tree/main/dist` |
+| **Project homepage** * | `https://github.com/WebG-it/cloudflare-cache-purge` |
+| **Download** * | `https://github.com/WebG-it/cloudflare-cache-purge/tree/main/dist` |
 | Demo | (vuoto) |
-| **Support** | `https://github.com/WebG-it/joomla-extensions/issues` |
-| **Documentation** | `https://github.com/WebG-it/joomla-extensions/blob/main/docs/USO.md` |
+| **Support** | `https://github.com/WebG-it/cloudflare-cache-purge/issues` |
+| **Documentation** | `https://github.com/WebG-it/cloudflare-cache-purge/blob/main/docs/USO.md` |
 | License page on your site | (vuoto — solo se a pagamento) |
 
 ## Joomla integration options
@@ -30,7 +30,7 @@ La descrizione DEVE essere in inglese.
 | Campo | Valore |
 |-------|--------|
 | **Download type** | `Free Direct Download link:` |
-| **Download URL** | `https://raw.githubusercontent.com/WebG-it/joomla-extensions/main/dist/plg_content_cfpurge-1.1.4.zip` |
+| **Download URL** | `https://raw.githubusercontent.com/WebG-it/cloudflare-cache-purge/main/dist/plg_content_cfpurge-1.1.4.zip` |
 
 ## Options
 
@@ -84,8 +84,8 @@ This plugin connects to the **Cloudflare API** (`https://api.cloudflare.com`) to
 
 ### Documentation & support
 
-- User guide: https://github.com/WebG-it/joomla-extensions/blob/main/docs/USO.md
-- Developer guide: https://github.com/WebG-it/joomla-extensions/blob/main/docs/DEVELOPING.md
-- Source code & issue tracker: https://github.com/WebG-it/joomla-extensions
+- User guide: https://github.com/WebG-it/cloudflare-cache-purge/blob/main/docs/USO.md
+- Developer guide: https://github.com/WebG-it/cloudflare-cache-purge/blob/main/docs/DEVELOPING.md
+- Source code & issue tracker: https://github.com/WebG-it/cloudflare-cache-purge
 
 Released under the GNU General Public License v2 or later.
